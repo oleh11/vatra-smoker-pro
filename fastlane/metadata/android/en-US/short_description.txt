@@ -1,1 +1,1 @@
-Free, open-source pellet grill controller and probe monitor over Bluetooth. No ads, no tracking.
+Bluetooth pellet grill control and probe monitor. Free, no ads, no tracking.
