@@ -1,4 +1,4 @@
-# Ватра Smoker Pro — Pellet Grill Companion
+# Vatra Smoker Pro — Pellet Grill Companion
 
 <p align="center">
   <a href="https://github.com/oleh11/vatra-smoker-pro/releases/latest"><img src="https://img.shields.io/github/v/release/oleh11/vatra-smoker-pro?style=for-the-badge&color=111111&logo=android&logoColor=black&label=Release" alt="Release" /></a>

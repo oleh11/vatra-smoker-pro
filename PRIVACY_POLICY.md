@@ -1,8 +1,8 @@
-# Privacy Policy for Ватра Smoker Pro
+# Privacy Policy for Vatra Smoker Pro
 
 **Effective Date:** November 19, 2026
 
-Ватра Smoker Pro ("the App") is a free, open-source companion app for Bluetooth pellet grills.
+Vatra Smoker Pro ("the App") is a free, open-source companion app for Bluetooth pellet grills.
 
 ## What the App collects
 **Nothing.** The App does not collect, transmit, store or sell personal data. It has no accounts, no analytics, no advertising and no internet permission.

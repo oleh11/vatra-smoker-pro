@@ -1,4 +1,4 @@
-<b>Ватра Smoker Pro</b> is a free, open-source companion app for Camp Chef-based Wi-Fi pellet grills, including the Cabela's Pro Series 36". It connects directly over Bluetooth, with no account and no cloud.
+<b>Vatra Smoker Pro</b> is a free, open-source companion app for Camp Chef-based Wi-Fi pellet grills, including the Cabela's Pro Series 36". It connects directly over Bluetooth, with no account and no cloud.
 
 <b>Control your grill</b>
 <ul>
