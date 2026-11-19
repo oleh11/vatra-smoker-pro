@@ -23,8 +23,8 @@
 
 ## ✨ Features
 
-- **Control:** start up, shut down, set target temperature and smoke level.
-- **Monitor:** chamber temperature, four meat probes, pellet level, faults and a live cook chart.
+- **Control:** start up, shut down, set target temperature and smoke level (changes are sent only after you press Confirm).
+- **Monitor:** chamber temperature, four meat probes (optional), faults and a live cook chart.
 - **Alarms:** foreground service with notification and vibration when a probe hits its target, screen off or on.
 - **Reliable connection:** 15 s timeout, automatic retry on Bluetooth error 133, auto-reconnect, and in-app pairing when the grill requires it.
 - **Wi-Fi setup:** send your home network to the grill over Bluetooth.

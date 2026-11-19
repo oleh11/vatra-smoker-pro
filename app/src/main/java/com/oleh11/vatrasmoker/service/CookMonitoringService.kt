@@ -99,13 +99,14 @@ class CookMonitoringService : Service() {
         observerJob = serviceScope.launch {
             repo.smokerState.collect { state ->
                 val title = "Grill: ${state.temperatureUnit.format(state.currentChamberTempF)} → ${state.temperatureUnit.format(state.targetChamberTempF)} | Smoke: ${state.smokeLevel}"
-                val activeProbes = state.activeProbes
+                val probesOn = repo.showMeatProbes.value
+                val activeProbes = if (probesOn) state.activeProbes else emptyList()
                 val probeSummary = if (activeProbes.isNotEmpty()) {
                     activeProbes.joinToString(" | ") { probe ->
                         "${probe.name}: ${state.temperatureUnit.format(probe.currentTempF)}${if (probe.targetTempF > 0) "/${state.temperatureUnit.format(probe.targetTempF)}" else ""}"
                     }
                 } else {
-                    "No meat probes connected | Pellet Hopper: ${state.hopper.levelPercentage}%"
+                    if (probesOn) "No meat probes connected" else "Grill temperature only"
                 }
 
                 notificationManager.notify(

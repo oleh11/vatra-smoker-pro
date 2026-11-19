@@ -16,6 +16,8 @@ interface SmokerRepository {
     val discoveredDevices: StateFlow<List<BluetoothDevice>>
     val cookHistory: StateFlow<List<CookDataPoint>>
     val isSimulatorMode: StateFlow<Boolean>
+    val showMeatProbes: StateFlow<Boolean>
+    fun setShowMeatProbes(enabled: Boolean)
 
     // Diagnostics & Debugging
     val debugLogs: StateFlow<List<String>>

@@ -593,7 +593,6 @@ class BleManager(
             add(SmokerGattUuid.WS_ID_TRANSITIONING)
             add(SmokerGattUuid.WS_ID_CHAMBER_TEMP)
             for (p in 1..SmokerGattUuid.PROBE_COUNT) add(SmokerGattUuid.probeWsId(p))
-            add(SmokerGattUuid.WS_ID_PELLET_LEVEL)
             add(SmokerGattUuid.WS_ID_LAST_FAULT)
         }
         for (wsId in initialReads) {
@@ -691,7 +690,6 @@ class BleManager(
                 add(SmokerGattUuid.WS_ID_MODE)
                 add(SmokerGattUuid.WS_ID_CHAMBER_TEMP)
                 for (p in 1..SmokerGattUuid.PROBE_COUNT) add(SmokerGattUuid.probeWsId(p))
-                add(SmokerGattUuid.WS_ID_PELLET_LEVEL)
             }
             while (true) {
                 delay(POLL_INTERVAL_MS)

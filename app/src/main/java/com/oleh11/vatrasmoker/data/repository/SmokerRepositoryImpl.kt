@@ -31,6 +31,15 @@ class SmokerRepositoryImpl(
     private val _isSimulatorMode = MutableStateFlow(false) // Default to real BLE scanning mode
     override val isSimulatorMode: StateFlow<Boolean> = _isSimulatorMode.asStateFlow()
 
+    private val prefs = context.getSharedPreferences("settings", Context.MODE_PRIVATE)
+    private val _showMeatProbes = MutableStateFlow(prefs.getBoolean("show_meat_probes", true))
+    override val showMeatProbes: StateFlow<Boolean> = _showMeatProbes.asStateFlow()
+
+    override fun setShowMeatProbes(enabled: Boolean) {
+        _showMeatProbes.value = enabled
+        prefs.edit().putBoolean("show_meat_probes", enabled).apply()
+    }
+
     private val _connectionState = MutableStateFlow<ConnectionState>(ConnectionState.Disconnected)
     override val connectionState: StateFlow<ConnectionState> = _connectionState.asStateFlow()
 

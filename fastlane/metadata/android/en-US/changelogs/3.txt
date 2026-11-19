@@ -1,0 +1,1 @@
+New: Meat Probes switch in Settings (turn probes off to see only grill temperature and smoke level). Cleaner layout.

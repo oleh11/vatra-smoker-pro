@@ -10,7 +10,7 @@
 <b>Watch the cook</b>
 <ul>
 <li>Live chamber temperature and up to four meat probes</li>
-<li>Pellet hopper level and fault messages</li>
+<li>Fault messages from the grill</li>
 <li>Live temperature chart for the whole cook</li>
 <li>Alarm and notification when a probe reaches its target, even with the screen off</li>
 </ul>

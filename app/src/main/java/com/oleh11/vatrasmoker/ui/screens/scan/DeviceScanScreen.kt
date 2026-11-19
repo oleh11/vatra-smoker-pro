@@ -138,9 +138,12 @@ fun DeviceScanScreen(
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.SpaceBetween,
-                        modifier = Modifier.padding(16.dp)
+                        modifier = Modifier.fillMaxWidth().padding(16.dp)
                     ) {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier.weight(1f)
+                        ) {
                             Surface(
                                 shape = CircleShape,
                                 color = if (isSimulatorMode) FlameAmber else Charcoal700,
@@ -156,7 +159,7 @@ fun DeviceScanScreen(
                                 }
                             }
                             Spacer(modifier = Modifier.width(12.dp))
-                            Column {
+                            Column(modifier = Modifier.weight(1f)) {
                                 Text(
                                     text = "Grill Simulator Engine",
                                     style = MaterialTheme.typography.titleMedium,

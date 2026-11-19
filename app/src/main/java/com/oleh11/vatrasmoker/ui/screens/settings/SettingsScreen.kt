@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Thermostat
 import androidx.compose.material.icons.filled.DeviceHub
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Notifications
@@ -34,6 +35,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -58,6 +60,15 @@ fun SettingsScreen(
     val smokerState by viewModel.smokerState.collectAsState()
     val isSimulatorMode by viewModel.isSimulatorMode.collectAsState()
     val isBackgroundServiceActive by viewModel.isBackgroundServiceActive.collectAsState()
+    val showMeatProbes by viewModel.showMeatProbes.collectAsState()
+    val appContext = androidx.compose.ui.platform.LocalContext.current
+    val appVersion = remember {
+        try {
+            appContext.packageManager.getPackageInfo(appContext.packageName, 0).versionName ?: "1.0"
+        } catch (e: Exception) {
+            "1.0"
+        }
+    }
     val isSoundAlarmEnabled by viewModel.isSoundAlarmEnabled.collectAsState()
 
     Scaffold(
@@ -99,9 +110,9 @@ fun SettingsScreen(
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.SpaceBetween,
-                        modifier = Modifier.padding(16.dp)
+                        modifier = Modifier.fillMaxWidth().padding(16.dp)
                     ) {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
+                        Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.weight(1f)) {
                             Icon(
                                 imageVector = Icons.Default.Thermostat,
                                 contentDescription = null,
@@ -109,7 +120,7 @@ fun SettingsScreen(
                                 modifier = Modifier.size(24.dp)
                             )
                             Spacer(modifier = Modifier.width(12.dp))
-                            Column {
+                            Column(modifier = Modifier.weight(1f)) {
                                 Text(
                                     text = "Temperature Unit",
                                     style = MaterialTheme.typography.titleMedium,
@@ -141,6 +152,59 @@ fun SettingsScreen(
                 }
             }
 
+            // Meat probes on/off
+            item {
+                Card(
+                    shape = RoundedCornerShape(16.dp),
+                    elevation = CardDefaults.elevatedCardElevation(defaultElevation = 4.dp),
+                    colors = CardDefaults.cardColors(containerColor = Charcoal800),
+                    border = BorderStroke(1.dp, Charcoal600),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        modifier = Modifier.fillMaxWidth().padding(16.dp)
+                    ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier.weight(1f)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Thermostat,
+                                contentDescription = null,
+                                tint = FlameOrange,
+                                modifier = Modifier.size(24.dp)
+                            )
+                            Spacer(modifier = Modifier.width(12.dp))
+                            Column(modifier = Modifier.weight(1f)) {
+                                Text(
+                                    text = "Meat Probes",
+                                    style = MaterialTheme.typography.titleMedium,
+                                    color = TextWhite,
+                                    fontWeight = FontWeight.Bold
+                                )
+                                Text(
+                                    text = "Show probe temperatures, chart lines and alarms. Turn off to see only grill temperature and smoke level.",
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = TextGray
+                                )
+                            }
+                        }
+
+                        Switch(
+                            checked = showMeatProbes,
+                            onCheckedChange = { viewModel.setShowMeatProbes(it) },
+                            colors = SwitchDefaults.colors(
+                                checkedThumbColor = TextWhite,
+                                checkedTrackColor = FlameOrange,
+                                uncheckedTrackColor = Charcoal700
+                            )
+                        )
+                    }
+                }
+            }
+
             // Foreground Monitoring Service Setting
             item {
                 Card(
@@ -153,9 +217,9 @@ fun SettingsScreen(
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.SpaceBetween,
-                        modifier = Modifier.padding(16.dp)
+                        modifier = Modifier.fillMaxWidth().padding(16.dp)
                     ) {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
+                        Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.weight(1f)) {
                             Icon(
                                 imageVector = Icons.Default.Notifications,
                                 contentDescription = null,
@@ -163,7 +227,7 @@ fun SettingsScreen(
                                 modifier = Modifier.size(24.dp)
                             )
                             Spacer(modifier = Modifier.width(12.dp))
-                            Column {
+                            Column(modifier = Modifier.weight(1f)) {
                                 Text(
                                     text = "Live Notification Bar",
                                     style = MaterialTheme.typography.titleMedium,
@@ -203,9 +267,9 @@ fun SettingsScreen(
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.SpaceBetween,
-                        modifier = Modifier.padding(16.dp)
+                        modifier = Modifier.fillMaxWidth().padding(16.dp)
                     ) {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
+                        Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.weight(1f)) {
                             Icon(
                                 imageVector = Icons.Default.Notifications,
                                 contentDescription = null,
@@ -213,7 +277,7 @@ fun SettingsScreen(
                                 modifier = Modifier.size(24.dp)
                             )
                             Spacer(modifier = Modifier.width(12.dp))
-                            Column {
+                            Column(modifier = Modifier.weight(1f)) {
                                 Text(
                                     text = "Meat Probe Sound Alarm",
                                     style = MaterialTheme.typography.titleMedium,
@@ -274,7 +338,7 @@ fun SettingsScreen(
                         InfoRow("Bluetooth Standard", "BLE 5.0 (Low Energy GATT)")
                         InfoRow("Wi-Fi Spectrum", "2.4 GHz 802.11 b/g/n")
                         InfoRow("Meat Probes Supported", "4 Ports (NTC 100K Thermistor)")
-                        InfoRow("App Version", "1.0.0 (API 35 Zero Deprecations)")
+                        InfoRow("App Version", appVersion)
                     }
                 }
             }

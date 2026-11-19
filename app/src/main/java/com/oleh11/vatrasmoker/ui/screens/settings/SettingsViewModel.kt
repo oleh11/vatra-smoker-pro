@@ -20,6 +20,9 @@ class SettingsViewModel(
 
     val smokerState: StateFlow<SmokerState> = repository.smokerState
     val isSimulatorMode: StateFlow<Boolean> = repository.isSimulatorMode
+    val showMeatProbes: StateFlow<Boolean> = repository.showMeatProbes
+
+    fun setShowMeatProbes(enabled: Boolean) = repository.setShowMeatProbes(enabled)
 
     private val _isBackgroundServiceActive = MutableStateFlow(true)
     val isBackgroundServiceActive: StateFlow<Boolean> = _isBackgroundServiceActive.asStateFlow()

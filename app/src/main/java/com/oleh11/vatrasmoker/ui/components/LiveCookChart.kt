@@ -46,6 +46,7 @@ import com.oleh11.vatrasmoker.ui.theme.TextWhite
 fun LiveCookChart(
     history: List<CookDataPoint>,
     unit: TemperatureUnit,
+    showProbes: Boolean = true,
     modifier: Modifier = Modifier
 ) {
     Card(
@@ -147,10 +148,10 @@ fun LiveCookChart(
 
                         // 1. Grill Chamber Temp
                         drawTempPath(FlameOrange) { it.grillTempF }
-                        // 2. Probe 1 Temp
-                        drawTempPath(Probe1Color) { it.probe1TempF }
-                        // 3. Probe 2 Temp
-                        drawTempPath(Probe2Color) { it.probe2TempF }
+                        if (showProbes) {
+                            drawTempPath(Probe1Color) { it.probe1TempF }
+                            drawTempPath(Probe2Color) { it.probe2TempF }
+                        }
                     }
                 }
             }
@@ -163,8 +164,10 @@ fun LiveCookChart(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 ChartLegend(color = FlameOrange, label = "Grill Chamber")
-                ChartLegend(color = Probe1Color, label = "Probe 1")
-                ChartLegend(color = Probe2Color, label = "Probe 2")
+                if (showProbes) {
+                    ChartLegend(color = Probe1Color, label = "Probe 1")
+                    ChartLegend(color = Probe2Color, label = "Probe 2")
+                }
             }
         }
     }

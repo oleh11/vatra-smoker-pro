@@ -20,6 +20,7 @@ class DashboardViewModel(
     val connectionState: StateFlow<ConnectionState> = repository.connectionState
     val cookHistory: StateFlow<List<CookDataPoint>> = repository.cookHistory
     val isSimulatorMode: StateFlow<Boolean> = repository.isSimulatorMode
+    val showMeatProbes: StateFlow<Boolean> = repository.showMeatProbes
 
     fun setTargetTemperature(tempF: Int) {
         viewModelScope.launch {

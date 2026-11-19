@@ -90,6 +90,9 @@ fun DashboardScreen(
     val state by viewModel.smokerState.collectAsState()
     val connectionState by viewModel.connectionState.collectAsState()
     val cookHistory by viewModel.cookHistory.collectAsState()
+    val showProbes by viewModel.showMeatProbes.collectAsState()
+    var pendingTempF by remember(state.targetChamberTempF) { mutableStateOf(state.targetChamberTempF) }
+    var pendingSmoke by remember(state.smokeLevel) { mutableStateOf(state.smokeLevel) }
     var showExtraProbes by remember { mutableStateOf(false) }
 
     var showShutdownDialog by remember { mutableStateOf(false) }
@@ -242,7 +245,9 @@ fun DashboardScreen(
                                 style = MaterialTheme.typography.titleMedium,
                                 fontWeight = FontWeight.ExtraBold,
                                 color = TextWhite,
-                                letterSpacing = 1.sp
+                                fontSize = 15.sp,
+                                letterSpacing = 0.5.sp,
+                                maxLines = 1
                             )
                             Row(verticalAlignment = Alignment.CenterVertically) {
                                 Icon(
@@ -267,6 +272,7 @@ fun DashboardScreen(
                         connectionState = connectionState,
                         onClick = onNavigateToScan
                     )
+                    Spacer(modifier = Modifier.width(12.dp))
                 },
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = Charcoal900)
             )
@@ -383,45 +389,6 @@ fun DashboardScreen(
                     }
                 }
             }
-            // Low Pellets Warning Banner
-            if (state.hopper.isLowPelletAlert) {
-                item {
-                    Card(
-                        shape = RoundedCornerShape(12.dp),
-                        elevation = CardDefaults.elevatedCardElevation(defaultElevation = 4.dp),
-                        colors = CardDefaults.cardColors(containerColor = Charcoal800),
-                        border = BorderStroke(1.5.dp, AlertRed),
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier.padding(14.dp)
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Warning,
-                                contentDescription = null,
-                                tint = AlertRed,
-                                modifier = Modifier.size(24.dp)
-                            )
-                            Spacer(modifier = Modifier.width(12.dp))
-                            Column {
-                                Text(
-                                    text = "LOW PELLET HOPPER ALERT",
-                                    style = MaterialTheme.typography.titleSmall,
-                                    color = TextWhite,
-                                    fontWeight = FontWeight.Bold
-                                )
-                                Text(
-                                    text = "Hopper is at ${state.hopper.levelPercentage}%. Refill wood pellets to avoid flameout.",
-                                    style = MaterialTheme.typography.bodySmall,
-                                    color = TextGray
-                                )
-                            }
-                        }
-                    }
-                }
-            }
-
             // Main Grill Temperature Control
             item {
                 Card(
@@ -437,9 +404,9 @@ fun DashboardScreen(
                     ) {
                         RadialTempGauge(
                             currentTempF = state.currentChamberTempF,
-                            targetTempF = state.targetChamberTempF,
+                            targetTempF = pendingTempF,
                             unit = state.temperatureUnit,
-                            onTargetChange = { viewModel.setTargetTemperature(it) }
+                            onTargetChange = { pendingTempF = it }
                         )
 
                         Spacer(modifier = Modifier.height(14.dp))
@@ -458,9 +425,9 @@ fun DashboardScreen(
                                 Pair(450, "Sear")
                             )
                             items(quickPresets) { (temp, label) ->
-                                val isSelected = state.targetChamberTempF == temp
+                                val isSelected = pendingTempF == temp
                                 OutlinedButton(
-                                    onClick = { viewModel.setTargetTemperature(temp) },
+                                    onClick = { pendingTempF = temp },
                                     shape = RoundedCornerShape(8.dp),
                                     colors = ButtonDefaults.outlinedButtonColors(
                                         containerColor = if (isSelected) FlameOrange else Charcoal700,
@@ -485,66 +452,38 @@ fun DashboardScreen(
                                 }
                             }
                         }
+
+                        if (pendingTempF != state.targetChamberTempF) {
+                            Spacer(modifier = Modifier.height(14.dp))
+                            ConfirmBar(
+                                label = "Confirm ${state.temperatureUnit.format(pendingTempF)}",
+                                onConfirm = { viewModel.setTargetTemperature(pendingTempF) },
+                                onCancel = { pendingTempF = state.targetChamberTempF }
+                            )
+                        }
                     }
                 }
             }
 
             // Smoke Level Dial
             item {
-                SmokeDial(
-                    smokeLevel = state.smokeLevel,
-                    onLevelChange = { viewModel.setSmokeLevel(it) }
-                )
-            }
-
-            // Pellet Hopper Status
-            item {
-                Card(
-                    shape = RoundedCornerShape(16.dp),
-                    elevation = CardDefaults.elevatedCardElevation(defaultElevation = 4.dp),
-                    colors = CardDefaults.cardColors(containerColor = Charcoal800),
-                    border = BorderStroke(1.dp, Charcoal600),
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Column(modifier = Modifier.padding(16.dp)) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            Text(
-                                text = "PELLET HOPPER",
-                                style = MaterialTheme.typography.titleMedium,
-                                color = TextWhite,
-                                fontWeight = FontWeight.Bold
-                            )
-                            Text(
-                                text = "${state.hopper.levelPercentage}% Filled",
-                                style = MaterialTheme.typography.titleMedium,
-                                color = if (state.hopper.levelPercentage > 20) SuccessGreen else AlertRed,
-                                fontWeight = FontWeight.Bold
-                            )
-                        }
-                        Spacer(modifier = Modifier.height(6.dp))
-                        Text(
-                            text = if (state.hopper.isLowPelletAlert) "Status: Low Pellets Warning" else "Status: Hopper Level Normal",
-                            style = MaterialTheme.typography.bodySmall,
-                            color = if (state.hopper.isLowPelletAlert) AlertRed else TextGray
-                        )
+                Column {
+                    SmokeDial(
+                        smokeLevel = pendingSmoke,
+                        onLevelChange = { pendingSmoke = it }
+                    )
+                    if (pendingSmoke != state.smokeLevel) {
                         Spacer(modifier = Modifier.height(10.dp))
-                        LinearProgressIndicator(
-                            progress = { state.hopper.levelPercentage / 100f },
-                            color = if (state.hopper.levelPercentage > 20) FlameAmber else AlertRed,
-                            trackColor = Charcoal700,
-                            strokeCap = StrokeCap.Round,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(8.dp)
+                        ConfirmBar(
+                            label = "Confirm smoke level $pendingSmoke",
+                            onConfirm = { viewModel.setSmokeLevel(pendingSmoke) },
+                            onCancel = { pendingSmoke = state.smokeLevel }
                         )
                     }
                 }
             }
 
+            if (showProbes) {
             // Dual Meat Probes Section (Probes 1 & 2 Optimized)
             item {
                 Row(
@@ -553,7 +492,7 @@ fun DashboardScreen(
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Text(
-                        text = "MEAT PROBES (DUAL PROBE SETUP)",
+                        text = "MEAT PROBES",
                         style = MaterialTheme.typography.titleSmall,
                         color = TextGray,
                         fontWeight = FontWeight.Bold,
@@ -566,7 +505,8 @@ fun DashboardScreen(
                         border = BorderStroke(1.dp, Charcoal700)
                     ) {
                         Text(
-                            text = if (showExtraProbes) "Hide Probes 3 & 4" else "+ Show Probes 3 & 4",
+                            text = if (showExtraProbes) "Hide probes 3 & 4" else "Show probes 3 & 4",
+                            maxLines = 1,
                             style = MaterialTheme.typography.labelSmall,
                             color = TextGray
                         )
@@ -607,14 +547,44 @@ fun DashboardScreen(
                     )
                 }
             }
+            }
 
             // Live Cook Temperature Curve Chart
             item {
                 LiveCookChart(
                     history = cookHistory,
-                    unit = state.temperatureUnit
+                    unit = state.temperatureUnit,
+                    showProbes = showProbes
                 )
             }
+        }
+    }
+}
+
+/** Two buttons shown under a control once its value was changed but not yet sent to the grill. */
+@Composable
+private fun ConfirmBar(label: String, onConfirm: () -> Unit, onCancel: () -> Unit) {
+    Row(
+        horizontalArrangement = Arrangement.spacedBy(10.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        OutlinedButton(
+            onClick = onCancel,
+            shape = RoundedCornerShape(12.dp),
+            border = BorderStroke(1.dp, Charcoal600),
+            colors = ButtonDefaults.outlinedButtonColors(contentColor = TextGray),
+            modifier = Modifier.weight(1f)
+        ) {
+            Text("Cancel", maxLines = 1)
+        }
+        Button(
+            onClick = onConfirm,
+            shape = RoundedCornerShape(12.dp),
+            colors = ButtonDefaults.buttonColors(containerColor = FlameOrange, contentColor = TextWhite),
+            modifier = Modifier.weight(2f)
+        ) {
+            Text(label, fontWeight = FontWeight.Bold, maxLines = 1)
         }
     }
 }

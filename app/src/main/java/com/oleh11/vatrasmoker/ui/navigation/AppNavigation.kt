@@ -1,5 +1,7 @@
 package com.oleh11.vatrasmoker.ui.navigation
 
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
@@ -81,12 +83,13 @@ fun AppNavigation() {
             }
         },
         containerColor = Charcoal900,
+        contentWindowInsets = WindowInsets(0, 0, 0, 0),
         modifier = Modifier.fillMaxSize()
     ) { innerPadding ->
         NavHost(
             navController = navController,
             startDestination = Screen.Dashboard.route,
-            modifier = Modifier.padding(innerPadding)
+            modifier = Modifier.padding(innerPadding).consumeWindowInsets(innerPadding)
         ) {
             composable(Screen.Dashboard.route) {
                 val vm: DashboardViewModel = viewModel(factory = DashboardViewModel.Factory(repository))
