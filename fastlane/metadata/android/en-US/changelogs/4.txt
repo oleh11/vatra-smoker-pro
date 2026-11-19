@@ -1,0 +1,1 @@
+Removed the background service and notification permission. The app now monitors your cook while it is open.

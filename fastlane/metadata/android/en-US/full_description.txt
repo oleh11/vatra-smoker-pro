@@ -12,7 +12,6 @@
 <li>Live chamber temperature and up to four meat probes</li>
 <li>Fault messages from the grill</li>
 <li>Live temperature chart for the whole cook</li>
-<li>Alarm and notification when a probe reaches its target, even with the screen off</li>
 </ul>
 
 <b>Cook planner</b>

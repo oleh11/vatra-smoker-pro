@@ -59,7 +59,6 @@ fun SettingsScreen(
 ) {
     val smokerState by viewModel.smokerState.collectAsState()
     val isSimulatorMode by viewModel.isSimulatorMode.collectAsState()
-    val isBackgroundServiceActive by viewModel.isBackgroundServiceActive.collectAsState()
     val showMeatProbes by viewModel.showMeatProbes.collectAsState()
     val appContext = androidx.compose.ui.platform.LocalContext.current
     val appVersion = remember {
@@ -69,7 +68,6 @@ fun SettingsScreen(
             "1.0"
         }
     }
-    val isSoundAlarmEnabled by viewModel.isSoundAlarmEnabled.collectAsState()
 
     Scaffold(
         topBar = {
@@ -185,7 +183,7 @@ fun SettingsScreen(
                                     fontWeight = FontWeight.Bold
                                 )
                                 Text(
-                                    text = "Show probe temperatures, chart lines and alarms. Turn off to see only grill temperature and smoke level.",
+                                    text = "Show probe temperatures and chart lines. Turn off to see only grill temperature and smoke level.",
                                     style = MaterialTheme.typography.bodySmall,
                                     color = TextGray
                                 )
@@ -195,106 +193,6 @@ fun SettingsScreen(
                         Switch(
                             checked = showMeatProbes,
                             onCheckedChange = { viewModel.setShowMeatProbes(it) },
-                            colors = SwitchDefaults.colors(
-                                checkedThumbColor = TextWhite,
-                                checkedTrackColor = FlameOrange,
-                                uncheckedTrackColor = Charcoal700
-                            )
-                        )
-                    }
-                }
-            }
-
-            // Foreground Monitoring Service Setting
-            item {
-                Card(
-                    shape = RoundedCornerShape(16.dp),
-                    elevation = CardDefaults.elevatedCardElevation(defaultElevation = 4.dp),
-                    colors = CardDefaults.cardColors(containerColor = Charcoal800),
-                    border = BorderStroke(1.dp, Charcoal600),
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        modifier = Modifier.fillMaxWidth().padding(16.dp)
-                    ) {
-                        Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.weight(1f)) {
-                            Icon(
-                                imageVector = Icons.Default.Notifications,
-                                contentDescription = null,
-                                tint = FlameOrange,
-                                modifier = Modifier.size(24.dp)
-                            )
-                            Spacer(modifier = Modifier.width(12.dp))
-                            Column(modifier = Modifier.weight(1f)) {
-                                Text(
-                                    text = "Live Notification Bar",
-                                    style = MaterialTheme.typography.titleMedium,
-                                    color = TextWhite,
-                                    fontWeight = FontWeight.Bold
-                                )
-                                Text(
-                                    text = "Keep live temperatures in notification shade",
-                                    style = MaterialTheme.typography.bodySmall,
-                                    color = TextGray
-                                )
-                            }
-                        }
-
-                        Switch(
-                            checked = isBackgroundServiceActive,
-                            onCheckedChange = { viewModel.toggleBackgroundService(it) },
-                            colors = SwitchDefaults.colors(
-                                checkedThumbColor = TextWhite,
-                                checkedTrackColor = FlameOrange,
-                                uncheckedTrackColor = Charcoal700
-                            )
-                        )
-                    }
-                }
-            }
-
-            // Probe Target Audible Alarm
-            item {
-                Card(
-                    shape = RoundedCornerShape(16.dp),
-                    elevation = CardDefaults.elevatedCardElevation(defaultElevation = 4.dp),
-                    colors = CardDefaults.cardColors(containerColor = Charcoal800),
-                    border = BorderStroke(1.dp, Charcoal600),
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        modifier = Modifier.fillMaxWidth().padding(16.dp)
-                    ) {
-                        Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.weight(1f)) {
-                            Icon(
-                                imageVector = Icons.Default.Notifications,
-                                contentDescription = null,
-                                tint = FlameAmber,
-                                modifier = Modifier.size(24.dp)
-                            )
-                            Spacer(modifier = Modifier.width(12.dp))
-                            Column(modifier = Modifier.weight(1f)) {
-                                Text(
-                                    text = "Meat Probe Sound Alarm",
-                                    style = MaterialTheme.typography.titleMedium,
-                                    color = TextWhite,
-                                    fontWeight = FontWeight.Bold
-                                )
-                                Text(
-                                    text = "Play alarm & vibrate when meat is done",
-                                    style = MaterialTheme.typography.bodySmall,
-                                    color = TextGray
-                                )
-                            }
-                        }
-
-                        Switch(
-                            checked = isSoundAlarmEnabled,
-                            onCheckedChange = { viewModel.toggleSoundAlarm(it) },
                             colors = SwitchDefaults.colors(
                                 checkedThumbColor = TextWhite,
                                 checkedTrackColor = FlameOrange,

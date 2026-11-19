@@ -7,7 +7,6 @@ import androidx.lifecycle.viewModelScope
 import com.oleh11.vatrasmoker.data.model.SmokerState
 import com.oleh11.vatrasmoker.data.model.TemperatureUnit
 import com.oleh11.vatrasmoker.data.repository.SmokerRepository
-import com.oleh11.vatrasmoker.service.CookMonitoringService
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -24,12 +23,6 @@ class SettingsViewModel(
 
     fun setShowMeatProbes(enabled: Boolean) = repository.setShowMeatProbes(enabled)
 
-    private val _isBackgroundServiceActive = MutableStateFlow(true)
-    val isBackgroundServiceActive: StateFlow<Boolean> = _isBackgroundServiceActive.asStateFlow()
-
-    private val _isSoundAlarmEnabled = MutableStateFlow(true)
-    val isSoundAlarmEnabled: StateFlow<Boolean> = _isSoundAlarmEnabled.asStateFlow()
-
     fun setTemperatureUnit(unit: TemperatureUnit) {
         viewModelScope.launch {
             repository.setTemperatureUnit(unit)
@@ -40,19 +33,6 @@ class SettingsViewModel(
         viewModelScope.launch {
             repository.setSimulatorMode(enabled)
         }
-    }
-
-    fun toggleBackgroundService(enabled: Boolean) {
-        _isBackgroundServiceActive.value = enabled
-        if (enabled) {
-            CookMonitoringService.startService(context)
-        } else {
-            CookMonitoringService.stopService(context)
-        }
-    }
-
-    fun toggleSoundAlarm(enabled: Boolean) {
-        _isSoundAlarmEnabled.value = enabled
     }
 
     class Factory(

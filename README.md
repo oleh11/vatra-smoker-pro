@@ -25,7 +25,6 @@
 
 - **Control:** start up, shut down, set target temperature and smoke level (changes are sent only after you press Confirm).
 - **Monitor:** chamber temperature, four meat probes (optional), faults and a live cook chart.
-- **Alarms:** foreground service with notification and vibration when a probe hits its target, screen off or on.
 - **Reliable connection:** 15 s timeout, automatic retry on Bluetooth error 133, auto-reconnect, and in-app pairing when the grill requires it.
 - **Wi-Fi setup:** send your home network to the grill over Bluetooth.
 - **Cook planner:** brisket, pork shoulder, 3-2-1 ribs, salmon, turkey and reverse-sear presets.
@@ -40,7 +39,7 @@ Privacy details: [PRIVACY_POLICY.md](PRIVACY_POLICY.md).
 
 ```
 com.oleh11.vatrasmoker/
-├── SmokerApp.kt                 # Application class & service initializer
+├── SmokerApp.kt                 # Application class & repository
 ├── MainActivity.kt              # Edge-to-edge Compose host & permissions
 ├── data/
 │   ├── ble/                     # Modern BLE manager, GATT UUIDs & packet codec
@@ -48,8 +47,6 @@ com.oleh11.vatrasmoker/
 │   ├── repository/              # Reactive repository layer with StateFlow
 │   ├── simulator/               # Realistic thermal & physics simulator engine
 │   └── wifi/                    # Wi-Fi network scanner & provisioning
-├── service/
-│   └── CookMonitoringService.kt # Foreground service with persistent notification & alarms
 └── ui/
     ├── components/              # Radial temp gauge, probe cards, smoke dial, live charts
     ├── navigation/              # Compose navigation suite & destinations

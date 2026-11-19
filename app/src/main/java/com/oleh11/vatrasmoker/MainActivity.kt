@@ -20,13 +20,6 @@ import com.oleh11.vatrasmoker.ui.theme.Charcoal900
 
 class MainActivity : ComponentActivity() {
 
-    /** Foreground service of type connectedDevice needs BLUETOOTH_CONNECT on Android 12+. */
-    private fun startMonitoringIfAllowed() {
-        val ok = Build.VERSION.SDK_INT < Build.VERSION_CODES.S ||
-            ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED
-        if (ok) com.oleh11.vatrasmoker.service.CookMonitoringService.startService(this)
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -34,7 +27,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             val permissionLauncher = rememberLauncherForActivityResult(
                 contract = ActivityResultContracts.RequestMultiplePermissions()
-            ) { startMonitoringIfAllowed() }
+            ) { /* result not needed */ }
 
             LaunchedEffect(Unit) {
                 val permissionsToRequest = mutableListOf<String>()
@@ -52,16 +45,8 @@ class MainActivity : ComponentActivity() {
                     }
                 }
 
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                    if (ContextCompat.checkSelfPermission(this@MainActivity, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
-                        permissionsToRequest.add(Manifest.permission.POST_NOTIFICATIONS)
-                    }
-                }
-
                 if (permissionsToRequest.isNotEmpty()) {
                     permissionLauncher.launch(permissionsToRequest.toTypedArray())
-                } else {
-                    startMonitoringIfAllowed()
                 }
             }
 

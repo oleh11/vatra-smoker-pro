@@ -12,7 +12,5 @@ class SmokerApp : Application() {
     override fun onCreate() {
         super.onCreate()
         repository = SmokerRepositoryImpl(this)
-        // The monitoring service is started from MainActivity once Bluetooth and
-        // notification permissions are granted (starting it earlier crashes on Android 14+).
     }
 }
