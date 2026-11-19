@@ -1,5 +1,7 @@
 package com.oleh11.vatrasmoker.ui.components
 
+import com.oleh11.vatrasmoker.ui.theme.OnAccent
+import com.oleh11.vatrasmoker.ui.theme.Accent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -50,7 +52,7 @@ fun SmokeDial(
     modifier: Modifier = Modifier
 ) {
     Card(
-        shape = RoundedCornerShape(16.dp),
+        shape = RoundedCornerShape(28.dp),
         elevation = CardDefaults.elevatedCardElevation(defaultElevation = 4.dp),
         colors = CardDefaults.cardColors(containerColor = Charcoal800),
         border = androidx.compose.foundation.BorderStroke(1.dp, Charcoal600),
@@ -130,10 +132,10 @@ fun SmokeDial(
                         modifier = Modifier
                             .size(32.dp)
                             .clip(RoundedCornerShape(8.dp))
-                            .background(if (isSelected) FlameOrange else Charcoal700)
+                            .background(if (isSelected) Accent else Charcoal700)
                             .border(
                                 width = 1.dp,
-                                color = if (isSelected) FlameAmber else Color.Transparent,
+                                color = if (isSelected) Accent else Color.Transparent,
                                 shape = RoundedCornerShape(8.dp)
                             )
                             .clickable { onLevelChange(level) }
@@ -141,7 +143,7 @@ fun SmokeDial(
                         Text(
                             text = level.toString(),
                             style = MaterialTheme.typography.labelMedium,
-                            color = if (isSelected) TextWhite else TextGray,
+                            color = if (isSelected) OnAccent else TextGray,
                             fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
                         )
                     }

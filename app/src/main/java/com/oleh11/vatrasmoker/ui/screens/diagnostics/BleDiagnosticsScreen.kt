@@ -1,5 +1,7 @@
 package com.oleh11.vatrasmoker.ui.screens.diagnostics
 
+import com.oleh11.vatrasmoker.ui.theme.OnAccent
+import com.oleh11.vatrasmoker.ui.theme.Accent
 import android.annotation.SuppressLint
 import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
@@ -114,7 +116,7 @@ fun BleDiagnosticsScreen(
                         Icon(imageVector = Icons.Default.BugReport, contentDescription = null, tint = FlameAmber)
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(
-                            text = "BLE DIAGNOSTIC CONSOLE",
+                            text = "Diagnostics",
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold,
                             color = TextWhite
@@ -201,7 +203,7 @@ fun BleDiagnosticsScreen(
                         } else {
                             Button(
                                 onClick = { viewModel.startScan() },
-                                colors = ButtonDefaults.buttonColors(containerColor = FlameOrange, contentColor = TextWhite),
+                                colors = ButtonDefaults.buttonColors(containerColor = Accent, contentColor = OnAccent),
                                 shape = RoundedCornerShape(8.dp),
                                 contentPadding = PaddingValues(horizontal = 10.dp, vertical = 4.dp)
                             ) {
@@ -254,7 +256,7 @@ fun BleDiagnosticsScreen(
                     modifier = Modifier
                         .weight(1f)
                         .fillMaxWidth()
-                        .background(Charcoal900)
+                        .background(Charcoal700)
                         .padding(8.dp)
                 ) {
                     LazyColumn(
@@ -294,7 +296,7 @@ fun BleDiagnosticsScreen(
                             onValueChange = { testHexInput = it },
                             label = { Text("Send Hex Bytes") },
                             colors = OutlinedTextFieldDefaults.colors(
-                                focusedBorderColor = FlameOrange,
+                                focusedBorderColor = Accent,
                                 unfocusedBorderColor = Charcoal700,
                                 focusedTextColor = TextWhite,
                                 unfocusedTextColor = TextWhite
@@ -304,7 +306,7 @@ fun BleDiagnosticsScreen(
                         Spacer(modifier = Modifier.width(8.dp))
                         Button(
                             onClick = { viewModel.sendRawHex(testHexInput) },
-                            colors = ButtonDefaults.buttonColors(containerColor = FlameOrange, contentColor = TextWhite),
+                            colors = ButtonDefaults.buttonColors(containerColor = Accent, contentColor = OnAccent),
                             shape = RoundedCornerShape(8.dp)
                         ) {
                             Icon(imageVector = Icons.AutoMirrored.Filled.Send, contentDescription = null)
@@ -370,7 +372,7 @@ fun BleDiagnosticsScreen(
                                         Column(
                                             modifier = Modifier
                                                 .padding(top = 6.dp)
-                                                .background(Charcoal900, RoundedCornerShape(6.dp))
+                                                .background(Charcoal700, RoundedCornerShape(6.dp))
                                                 .padding(8.dp)
                                                 .fillMaxWidth()
                                         ) {
@@ -457,7 +459,7 @@ fun BleDiagnosticsScreen(
                                             onClick = { viewModel.connectBle(device) },
                                             shape = RoundedCornerShape(8.dp),
                                             elevation = ButtonDefaults.elevatedButtonElevation(defaultElevation = 2.dp),
-                                            colors = ButtonDefaults.buttonColors(containerColor = FlameOrange, contentColor = TextWhite),
+                                            colors = ButtonDefaults.buttonColors(containerColor = Accent, contentColor = OnAccent),
                                             contentPadding = PaddingValues(horizontal = 10.dp, vertical = 4.dp)
                                         ) {
                                             Text("Connect", style = MaterialTheme.typography.labelSmall)

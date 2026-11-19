@@ -1,5 +1,8 @@
 package com.oleh11.vatrasmoker.ui.screens.scan
 
+import androidx.compose.ui.draw.clip
+import com.oleh11.vatrasmoker.ui.theme.OnAccent
+import com.oleh11.vatrasmoker.ui.theme.Accent
 import android.annotation.SuppressLint
 import android.bluetooth.BluetoothDevice
 import androidx.compose.animation.core.FastOutSlowInEasing
@@ -89,7 +92,7 @@ fun DeviceScanScreen(
             TopAppBar(
                 title = {
                     Text(
-                        text = "CONNECT TO SMOKER",
+                        text = "Connect",
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Bold,
                         color = TextWhite
@@ -120,16 +123,16 @@ fun DeviceScanScreen(
             contentPadding = PaddingValues(
                 start = 16.dp,
                 end = 16.dp,
-                top = innerPadding.calculateTopPadding() + 8.dp,
+                top = 8.dp,
                 bottom = innerPadding.calculateBottomPadding() + 24.dp
             ),
             verticalArrangement = Arrangement.spacedBy(16.dp),
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier.fillMaxSize().padding(top = innerPadding.calculateTopPadding())
         ) {
             // Simulator Mode Toggle Card
             item {
                 Card(
-                    shape = RoundedCornerShape(16.dp),
+                    shape = RoundedCornerShape(28.dp),
                     elevation = CardDefaults.elevatedCardElevation(defaultElevation = 4.dp),
                     colors = CardDefaults.cardColors(containerColor = Charcoal800),
                     border = BorderStroke(1.dp, if (isSimulatorMode) FlameAmber else Charcoal600),
@@ -153,7 +156,7 @@ fun DeviceScanScreen(
                                     Icon(
                                         imageVector = Icons.Default.Science,
                                         contentDescription = null,
-                                        tint = if (isSimulatorMode) Charcoal900 else TextGray,
+                                        tint = if (isSimulatorMode) androidx.compose.ui.graphics.Color.White else TextGray,
                                         modifier = Modifier.size(22.dp)
                                     )
                                 }
@@ -180,8 +183,8 @@ fun DeviceScanScreen(
                                 viewModel.setSimulatorMode(enabled)
                             },
                             colors = SwitchDefaults.colors(
-                                checkedThumbColor = TextWhite,
-                                checkedTrackColor = FlameOrange,
+                                checkedThumbColor = OnAccent,
+                                checkedTrackColor = Accent,
                                 uncheckedTrackColor = Charcoal700
                             )
                         )
@@ -199,7 +202,7 @@ fun DeviceScanScreen(
             // Pairing Instructions Guide
             item {
                 Card(
-                    shape = RoundedCornerShape(16.dp),
+                    shape = RoundedCornerShape(28.dp),
                     elevation = CardDefaults.elevatedCardElevation(defaultElevation = 4.dp),
                     colors = CardDefaults.cardColors(containerColor = Charcoal800),
                     border = BorderStroke(1.dp, Charcoal600),
@@ -240,19 +243,18 @@ fun DeviceScanScreen(
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Text(
-                        text = "NEARBY BLUETOOTH DEVICES",
+                        text = "NEARBY DEVICES",
                         style = MaterialTheme.typography.labelLarge,
                         color = TextGray,
                         fontWeight = FontWeight.Bold
                     )
                     if (!isSimulatorMode && !isScanning) {
-                        OutlinedButton(
+                        androidx.compose.material3.Button(
                             onClick = { viewModel.startScan() },
-                            shape = RoundedCornerShape(8.dp),
-                            border = BorderStroke(1.dp, FlameOrange),
-                            colors = ButtonDefaults.outlinedButtonColors(contentColor = FlameOrange)
+                            shape = RoundedCornerShape(50),
+                            colors = ButtonDefaults.buttonColors(containerColor = Accent, contentColor = OnAccent)
                         ) {
-                            Text(text = "Scan Now")
+                            Text(text = "Scan now", fontWeight = FontWeight.Bold)
                         }
                     }
                 }
@@ -260,16 +262,30 @@ fun DeviceScanScreen(
 
             if (discoveredDevices.isEmpty() && !isSimulatorMode) {
                 item {
-                    Box(
-                        contentAlignment = Alignment.Center,
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(vertical = 32.dp)
                     ) {
+                        androidx.compose.foundation.Image(
+                            painter = androidx.compose.ui.res.painterResource(id = com.oleh11.vatrasmoker.R.drawable.ic_app_logo),
+                            contentDescription = "Vatra Smoker Pro logo",
+                            modifier = Modifier
+                                .size(88.dp)
+                                .clip(RoundedCornerShape(26.dp))
+                        )
+                        Spacer(modifier = Modifier.height(16.dp))
                         Text(
-                            text = if (isScanning) "Searching for Cabela's / Camp Chef controllers..." else "No devices found yet. Tap 'Scan Now' to search.",
+                            text = if (isScanning) "Searching for your grill..." else "No grill found yet",
+                            style = MaterialTheme.typography.titleMedium,
+                            color = TextWhite,
+                            fontWeight = FontWeight.ExtraBold
+                        )
+                        Text(
+                            text = if (isScanning) "Keep the phone close to the controller." else "Tap Scan now, or try the simulator above.",
                             style = MaterialTheme.typography.bodyMedium,
-                            color = TextDim
+                            color = TextGray
                         )
                     }
                 }
@@ -312,6 +328,7 @@ private fun RadarScanView() {
             .fillMaxWidth()
             .height(180.dp)
     ) {
+        val ringColor = FlameOrange
         Canvas(modifier = Modifier.size(160.dp)) {
             val maxRadius = size.minDimension / 2
             val currentRadius = maxRadius * pulseRadius
@@ -319,14 +336,14 @@ private fun RadarScanView() {
 
             // Pulsing Ring 1
             drawCircle(
-                color = FlameOrange.copy(alpha = alpha * 0.7f),
+                color = ringColor.copy(alpha = alpha * 0.7f),
                 radius = currentRadius,
                 style = Stroke(width = 4.dp.toPx())
             )
 
             // Inner Center Target
             drawCircle(
-                color = FlameOrange,
+                color = ringColor,
                 radius = 12.dp.toPx()
             )
         }
@@ -354,7 +371,7 @@ private fun DeviceItemCard(
     Card(
         shape = RoundedCornerShape(14.dp),
         elevation = CardDefaults.elevatedCardElevation(defaultElevation = 4.dp),
-        colors = CardDefaults.cardColors(containerColor = if (isCabelasDevice) Charcoal800 else Charcoal900),
+        colors = CardDefaults.cardColors(containerColor = if (isCabelasDevice) Charcoal800 else Charcoal700),
         border = BorderStroke(1.dp, if (isConnected) SuccessGreen else if (isCabelasDevice) FlameOrange else Charcoal600),
         modifier = Modifier.fillMaxWidth()
     ) {
@@ -419,7 +436,7 @@ private fun DeviceItemCard(
                     shape = RoundedCornerShape(8.dp),
                     elevation = ButtonDefaults.elevatedButtonElevation(defaultElevation = 2.dp),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = if (isConnected) SuccessGreen else FlameOrange,
+                        containerColor = if (isConnected) SuccessGreen else Accent,
                         contentColor = TextWhite
                     ),
                     contentPadding = PaddingValues(horizontal = 10.dp, vertical = 4.dp)

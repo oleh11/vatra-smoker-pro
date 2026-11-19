@@ -1,5 +1,12 @@
 package com.oleh11.vatrasmoker.ui.screens.settings
 
+import com.oleh11.vatrasmoker.ui.theme.ThemeSettings
+import com.oleh11.vatrasmoker.ui.theme.ThemeMode
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.background
+import com.oleh11.vatrasmoker.ui.theme.OnAccent
+import com.oleh11.vatrasmoker.ui.theme.Accent
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -80,7 +87,7 @@ fun SettingsScreen(
             TopAppBar(
                 title = {
                     Text(
-                        text = "APP & GRILL SETTINGS",
+                        text = "Settings",
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Bold,
                         color = TextWhite
@@ -96,16 +103,16 @@ fun SettingsScreen(
             contentPadding = PaddingValues(
                 start = 16.dp,
                 end = 16.dp,
-                top = innerPadding.calculateTopPadding() + 8.dp,
+                top = 8.dp,
                 bottom = innerPadding.calculateBottomPadding() + 24.dp
             ),
             verticalArrangement = Arrangement.spacedBy(16.dp),
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier.fillMaxSize().padding(top = innerPadding.calculateTopPadding())
         ) {
             // Temperature Unit Setting
             item {
                 Card(
-                    shape = RoundedCornerShape(16.dp),
+                    shape = RoundedCornerShape(28.dp),
                     elevation = CardDefaults.elevatedCardElevation(defaultElevation = 4.dp),
                     colors = CardDefaults.cardColors(containerColor = Charcoal800),
                     border = BorderStroke(1.dp, Charcoal600),
@@ -147,8 +154,8 @@ fun SettingsScreen(
                                 )
                             },
                             colors = SwitchDefaults.colors(
-                                checkedThumbColor = TextWhite,
-                                checkedTrackColor = FlameOrange,
+                                checkedThumbColor = OnAccent,
+                                checkedTrackColor = Accent,
                                 uncheckedTrackColor = Charcoal700
                             )
                         )
@@ -156,10 +163,53 @@ fun SettingsScreen(
                 }
             }
 
+            // Appearance: follow the phone, or force light / dark
+            item {
+                Card(
+                    shape = RoundedCornerShape(28.dp),
+                    elevation = CardDefaults.elevatedCardElevation(defaultElevation = 4.dp),
+                    colors = CardDefaults.cardColors(containerColor = Charcoal800),
+                    border = BorderStroke(1.dp, Charcoal600),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Column(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
+                        Text("Appearance", style = MaterialTheme.typography.titleMedium, color = TextWhite, fontWeight = FontWeight.Bold)
+                        Text("Follows your phone by default", style = MaterialTheme.typography.bodySmall, color = TextGray)
+                        Spacer(modifier = Modifier.height(12.dp))
+                        Row(
+                            horizontalArrangement = Arrangement.spacedBy(6.dp),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .background(Charcoal700, RoundedCornerShape(50))
+                                .padding(4.dp)
+                        ) {
+                            listOf(ThemeMode.SYSTEM to "System", ThemeMode.LIGHT to "Light", ThemeMode.DARK to "Dark").forEach { (mode, label) ->
+                                val selected = ThemeSettings.mode == mode
+                                Box(
+                                    contentAlignment = Alignment.Center,
+                                    modifier = Modifier
+                                        .weight(1f)
+                                        .background(if (selected) Accent else androidx.compose.ui.graphics.Color.Transparent, RoundedCornerShape(50))
+                                        .clickable { ThemeSettings.set(appContext, mode) }
+                                        .padding(vertical = 10.dp)
+                                ) {
+                                    Text(
+                                        text = label,
+                                        style = MaterialTheme.typography.labelLarge,
+                                        fontWeight = FontWeight.Bold,
+                                        color = if (selected) OnAccent else TextWhite
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
             // Meat probes on/off
             item {
                 Card(
-                    shape = RoundedCornerShape(16.dp),
+                    shape = RoundedCornerShape(28.dp),
                     elevation = CardDefaults.elevatedCardElevation(defaultElevation = 4.dp),
                     colors = CardDefaults.cardColors(containerColor = Charcoal800),
                     border = BorderStroke(1.dp, Charcoal600),
@@ -200,8 +250,8 @@ fun SettingsScreen(
                             checked = showMeatProbes,
                             onCheckedChange = { viewModel.setShowMeatProbes(it) },
                             colors = SwitchDefaults.colors(
-                                checkedThumbColor = TextWhite,
-                                checkedTrackColor = FlameOrange,
+                                checkedThumbColor = OnAccent,
+                                checkedTrackColor = Accent,
                                 uncheckedTrackColor = Charcoal700
                             )
                         )
@@ -269,7 +319,7 @@ fun SettingsScreen(
             // Hardware & Info Card
             item {
                 Card(
-                    shape = RoundedCornerShape(16.dp),
+                    shape = RoundedCornerShape(28.dp),
                     elevation = CardDefaults.elevatedCardElevation(defaultElevation = 4.dp),
                     colors = CardDefaults.cardColors(containerColor = Charcoal800),
                     border = BorderStroke(1.dp, Charcoal600),
@@ -337,7 +387,7 @@ private fun openLink(context: android.content.Context, url: String) {
 @Composable
 private fun SettingsInfoCard(icon: androidx.compose.ui.graphics.vector.ImageVector, title: String, subtitle: String) {
     Card(
-        shape = RoundedCornerShape(16.dp),
+        shape = RoundedCornerShape(28.dp),
         elevation = CardDefaults.elevatedCardElevation(defaultElevation = 4.dp),
         colors = CardDefaults.cardColors(containerColor = Charcoal800),
         border = BorderStroke(1.dp, Charcoal600),
@@ -366,7 +416,7 @@ private fun SettingsActionCard(
 ) {
     Card(
         onClick = onClick,
-        shape = RoundedCornerShape(16.dp),
+        shape = RoundedCornerShape(28.dp),
         elevation = CardDefaults.elevatedCardElevation(defaultElevation = 4.dp),
         colors = CardDefaults.cardColors(containerColor = Charcoal800),
         border = BorderStroke(1.dp, Charcoal600),

@@ -1,5 +1,7 @@
 package com.oleh11.vatrasmoker.ui.components
 
+import com.oleh11.vatrasmoker.ui.theme.OnAccent
+import com.oleh11.vatrasmoker.ui.theme.Accent
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -34,6 +36,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.oleh11.vatrasmoker.data.model.CookDataPoint
 import com.oleh11.vatrasmoker.data.model.TemperatureUnit
+import com.oleh11.vatrasmoker.ui.theme.Charcoal500
 import com.oleh11.vatrasmoker.ui.theme.Charcoal700
 import com.oleh11.vatrasmoker.ui.theme.Charcoal800
 import com.oleh11.vatrasmoker.ui.theme.FlameOrange
@@ -50,7 +53,7 @@ fun LiveCookChart(
     modifier: Modifier = Modifier
 ) {
     Card(
-        shape = RoundedCornerShape(16.dp),
+        shape = RoundedCornerShape(28.dp),
         elevation = CardDefaults.elevatedCardElevation(defaultElevation = 4.dp),
         colors = CardDefaults.cardColors(containerColor = Charcoal800),
         border = androidx.compose.foundation.BorderStroke(1.dp, com.oleh11.vatrasmoker.ui.theme.Charcoal600),
@@ -80,6 +83,9 @@ fun LiveCookChart(
             }
 
             Spacer(modifier = Modifier.height(12.dp))
+
+            val gridColor = Charcoal500
+            val emberColor = FlameOrange
 
             // Chart Canvas
             Box(
@@ -111,7 +117,7 @@ fun LiveCookChart(
                         for (i in 0..gridCount) {
                             val y = height * (i.toFloat() / gridCount)
                             drawLine(
-                                color = Charcoal700,
+                                color = gridColor,
                                 start = Offset(0f, y),
                                 end = Offset(width, y),
                                 strokeWidth = 1.dp.toPx()
@@ -147,7 +153,7 @@ fun LiveCookChart(
                         }
 
                         // 1. Grill Chamber Temp
-                        drawTempPath(FlameOrange) { it.grillTempF }
+                        drawTempPath(emberColor) { it.grillTempF }
                         if (showProbes) {
                             drawTempPath(Probe1Color) { it.probe1TempF }
                             drawTempPath(Probe2Color) { it.probe2TempF }

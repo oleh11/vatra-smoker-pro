@@ -1,5 +1,12 @@
 package com.oleh11.vatrasmoker.ui.components
 
+import com.oleh11.vatrasmoker.ui.theme.OnAccent
+import com.oleh11.vatrasmoker.ui.theme.Accent
+import com.oleh11.vatrasmoker.R
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.draw.clip
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -63,8 +70,16 @@ fun WalkthroughDialog(onFinished: () -> Unit) {
     AlertDialog(
         onDismissRequest = onFinished,
         containerColor = Charcoal800,
+        shape = RoundedCornerShape(28.dp),
+        icon = {
+            Image(
+                painter = painterResource(id = R.drawable.ic_app_logo),
+                contentDescription = "Vatra Smoker Pro logo",
+                modifier = Modifier.size(64.dp).clip(RoundedCornerShape(20.dp))
+            )
+        },
         title = {
-            Text(page.title, color = TextWhite, fontWeight = FontWeight.Bold)
+            Text(page.title, color = TextWhite, fontWeight = FontWeight.ExtraBold)
         },
         text = {
             Column(modifier = Modifier.fillMaxWidth()) {
@@ -78,15 +93,18 @@ fun WalkthroughDialog(onFinished: () -> Unit) {
                         Spacer(
                             modifier = Modifier
                                 .size(8.dp)
-                                .background(if (i == index) FlameOrange else Charcoal600, CircleShape)
+                                .background(if (i == index) Accent else Charcoal600, CircleShape)
                         )
                     }
                 }
             }
         },
         confirmButton = {
-            TextButton(onClick = { if (isLast) onFinished() else index++ }) {
-                Text(if (isLast) "Get started" else "Next", color = FlameOrange, fontWeight = FontWeight.Bold)
+            androidx.compose.material3.Button(
+                onClick = { if (isLast) onFinished() else index++ },
+                colors = androidx.compose.material3.ButtonDefaults.buttonColors(containerColor = Accent, contentColor = OnAccent)
+            ) {
+                Text(if (isLast) "Get started" else "Next", fontWeight = FontWeight.Bold)
             }
         },
         dismissButton = {

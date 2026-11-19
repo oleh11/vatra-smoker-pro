@@ -1,5 +1,7 @@
 package com.oleh11.vatrasmoker.ui.components
 
+import com.oleh11.vatrasmoker.ui.theme.OnAccent
+import com.oleh11.vatrasmoker.ui.theme.Accent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
@@ -67,7 +69,7 @@ fun ProbeCard(
     }
 
     Card(
-        shape = RoundedCornerShape(16.dp),
+        shape = RoundedCornerShape(28.dp),
         colors = CardDefaults.cardColors(containerColor = Charcoal800),
         elevation = CardDefaults.elevatedCardElevation(defaultElevation = 4.dp),
         border = BorderStroke(

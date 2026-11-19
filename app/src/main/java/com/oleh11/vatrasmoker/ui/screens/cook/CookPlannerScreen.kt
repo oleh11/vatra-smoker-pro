@@ -1,5 +1,7 @@
 package com.oleh11.vatrasmoker.ui.screens.cook
 
+import com.oleh11.vatrasmoker.ui.theme.OnAccent
+import com.oleh11.vatrasmoker.ui.theme.Accent
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -69,7 +71,7 @@ fun CookPlannerScreen(
             TopAppBar(
                 title = {
                     Text(
-                        text = "BBQ RECIPES & COOK PRESETS",
+                        text = "Cook planner",
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Bold,
                         color = TextWhite
@@ -85,11 +87,11 @@ fun CookPlannerScreen(
             contentPadding = PaddingValues(
                 start = 16.dp,
                 end = 16.dp,
-                top = innerPadding.calculateTopPadding() + 8.dp,
+                top = 8.dp,
                 bottom = innerPadding.calculateBottomPadding() + 24.dp
             ),
             verticalArrangement = Arrangement.spacedBy(16.dp),
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier.fillMaxSize().padding(top = innerPadding.calculateTopPadding())
         ) {
             item {
                 Text(
@@ -123,10 +125,10 @@ private fun PresetCard(
     onApply: () -> Unit
 ) {
     Card(
-        shape = RoundedCornerShape(16.dp),
+        shape = RoundedCornerShape(28.dp),
         elevation = CardDefaults.elevatedCardElevation(defaultElevation = 4.dp),
         colors = CardDefaults.cardColors(containerColor = Charcoal800),
-        border = BorderStroke(1.dp, if (isSelected) FlameOrange else com.oleh11.vatrasmoker.ui.theme.Charcoal600),
+        border = BorderStroke(1.dp, if (isSelected) Accent else com.oleh11.vatrasmoker.ui.theme.Charcoal600),
         modifier = Modifier.fillMaxWidth()
     ) {
         Column(modifier = Modifier.padding(16.dp)) {

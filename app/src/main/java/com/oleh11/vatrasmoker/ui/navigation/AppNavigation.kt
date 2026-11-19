@@ -36,6 +36,7 @@ import com.oleh11.vatrasmoker.ui.screens.settings.SettingsScreen
 import com.oleh11.vatrasmoker.ui.screens.settings.SettingsViewModel
 import com.oleh11.vatrasmoker.ui.screens.wifi.WifiSetupScreen
 import com.oleh11.vatrasmoker.ui.screens.wifi.WifiSetupViewModel
+import com.oleh11.vatrasmoker.ui.theme.Charcoal500
 import com.oleh11.vatrasmoker.ui.theme.Charcoal800
 import com.oleh11.vatrasmoker.ui.theme.Charcoal900
 import com.oleh11.vatrasmoker.ui.theme.FlameOrange
@@ -87,8 +88,8 @@ fun AppNavigation() {
                         },
                         colors = NavigationBarItemDefaults.colors(
                             selectedIconColor = TextWhite,
-                            selectedTextColor = FlameOrange,
-                            indicatorColor = FlameOrange,
+                            selectedTextColor = TextWhite,
+                            indicatorColor = Charcoal500,
                             unselectedIconColor = TextGray,
                             unselectedTextColor = TextGray
                         )

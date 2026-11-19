@@ -1,5 +1,7 @@
 package com.oleh11.vatrasmoker.ui.screens.wifi
 
+import com.oleh11.vatrasmoker.ui.theme.OnAccent
+import com.oleh11.vatrasmoker.ui.theme.Accent
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -73,7 +75,7 @@ fun WifiSetupScreen(
             TopAppBar(
                 title = {
                     Text(
-                        text = "WI-FI PROVISIONING",
+                        text = "Grill Wi-Fi",
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Bold,
                         color = TextWhite
@@ -89,16 +91,16 @@ fun WifiSetupScreen(
             contentPadding = PaddingValues(
                 start = 16.dp,
                 end = 16.dp,
-                top = innerPadding.calculateTopPadding() + 8.dp,
+                top = 8.dp,
                 bottom = innerPadding.calculateBottomPadding() + 24.dp
             ),
             verticalArrangement = Arrangement.spacedBy(16.dp),
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier.fillMaxSize().padding(top = innerPadding.calculateTopPadding())
         ) {
             // Wi-Fi 2.4 GHz notice
             item {
                 Card(
-                    shape = RoundedCornerShape(16.dp),
+                    shape = RoundedCornerShape(28.dp),
                     elevation = CardDefaults.elevatedCardElevation(defaultElevation = 4.dp),
                     colors = CardDefaults.cardColors(containerColor = Charcoal800),
                     border = BorderStroke(1.dp, FlameAmber),
@@ -135,7 +137,7 @@ fun WifiSetupScreen(
             // Current Wi-Fi Status
             item {
                 Card(
-                    shape = RoundedCornerShape(16.dp),
+                    shape = RoundedCornerShape(28.dp),
                     elevation = CardDefaults.elevatedCardElevation(defaultElevation = 4.dp),
                     colors = CardDefaults.cardColors(containerColor = Charcoal800),
                     border = BorderStroke(1.dp, com.oleh11.vatrasmoker.ui.theme.Charcoal600),
@@ -173,7 +175,7 @@ fun WifiSetupScreen(
             // Provisioning Form
             item {
                 Card(
-                    shape = RoundedCornerShape(16.dp),
+                    shape = RoundedCornerShape(28.dp),
                     elevation = CardDefaults.elevatedCardElevation(defaultElevation = 4.dp),
                     colors = CardDefaults.cardColors(containerColor = Charcoal800),
                     border = BorderStroke(1.dp, com.oleh11.vatrasmoker.ui.theme.Charcoal600),
@@ -197,7 +199,7 @@ fun WifiSetupScreen(
                                 Icon(imageVector = Icons.Default.Wifi, contentDescription = null, tint = FlameOrange)
                             },
                             colors = OutlinedTextFieldDefaults.colors(
-                                focusedBorderColor = FlameOrange,
+                                focusedBorderColor = Accent,
                                 unfocusedBorderColor = Charcoal700,
                                 focusedTextColor = TextWhite,
                                 unfocusedTextColor = TextWhite
@@ -216,7 +218,7 @@ fun WifiSetupScreen(
                                 Icon(imageVector = Icons.Default.Lock, contentDescription = null, tint = FlameOrange)
                             },
                             colors = OutlinedTextFieldDefaults.colors(
-                                focusedBorderColor = FlameOrange,
+                                focusedBorderColor = Accent,
                                 unfocusedBorderColor = Charcoal700,
                                 focusedTextColor = TextWhite,
                                 unfocusedTextColor = TextWhite
@@ -285,7 +287,7 @@ fun WifiSetupScreen(
                     shape = RoundedCornerShape(12.dp),
                     elevation = CardDefaults.elevatedCardElevation(defaultElevation = 4.dp),
                     colors = CardDefaults.cardColors(containerColor = Charcoal800),
-                    border = BorderStroke(1.dp, if (selectedSsid == net.ssid) FlameOrange else com.oleh11.vatrasmoker.ui.theme.Charcoal600),
+                    border = BorderStroke(1.dp, if (selectedSsid == net.ssid) Accent else com.oleh11.vatrasmoker.ui.theme.Charcoal600),
                     modifier = Modifier
                         .fillMaxWidth()
                         .clickable { viewModel.selectSsid(net.ssid) }
@@ -299,7 +301,7 @@ fun WifiSetupScreen(
                             Icon(
                                 imageVector = Icons.Default.SignalWifi4Bar,
                                 contentDescription = null,
-                                tint = if (selectedSsid == net.ssid) FlameOrange else TextGray,
+                                tint = if (selectedSsid == net.ssid) Accent else TextGray,
                                 modifier = Modifier.size(22.dp)
                             )
                             Spacer(modifier = Modifier.width(12.dp))

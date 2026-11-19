@@ -16,13 +16,14 @@ import androidx.compose.ui.Modifier
 import androidx.core.content.ContextCompat
 import com.oleh11.vatrasmoker.ui.navigation.AppNavigation
 import com.oleh11.vatrasmoker.ui.theme.CabelasSmokerCompanionTheme
-import com.oleh11.vatrasmoker.ui.theme.Charcoal900
+import com.oleh11.vatrasmoker.ui.theme.ThemeSettings
 
 class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        ThemeSettings.load(this)
 
         setContent {
             val permissionLauncher = rememberLauncherForActivityResult(
@@ -50,10 +51,10 @@ class MainActivity : ComponentActivity() {
                 }
             }
 
-            CabelasSmokerCompanionTheme {
+            CabelasSmokerCompanionTheme(themeMode = ThemeSettings.mode) {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
-                    color = Charcoal900
+                    color = androidx.compose.ui.graphics.Color.Transparent
                 ) {
                     AppNavigation()
                 }

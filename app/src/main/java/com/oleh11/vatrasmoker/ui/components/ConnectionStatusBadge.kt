@@ -73,7 +73,7 @@ fun ConnectionStatusBadge(
     }
 
     Surface(
-        shape = RoundedCornerShape(20.dp),
+        shape = RoundedCornerShape(50),
         color = bgColor,
         border = BorderStroke(1.dp, if (connectionState is ConnectionState.Disconnected) Charcoal700 else FlameAmber),
         modifier = modifier.clickable { onClick() }

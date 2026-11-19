@@ -1,5 +1,11 @@
 package com.oleh11.vatrasmoker.ui.screens.dashboard
 
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.draw.clip
+import androidx.compose.foundation.border
+import androidx.compose.foundation.Image
+import com.oleh11.vatrasmoker.ui.theme.OnAccent
+import com.oleh11.vatrasmoker.ui.theme.Accent
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -169,7 +175,7 @@ fun DashboardScreen(
                         onValueChange = { wifiSsidInput = it },
                         label = { Text("Network Name (SSID)") },
                         colors = OutlinedTextFieldDefaults.colors(
-                            focusedBorderColor = FlameOrange,
+                            focusedBorderColor = Accent,
                             unfocusedBorderColor = Charcoal700,
                             focusedTextColor = TextWhite,
                             unfocusedTextColor = TextWhite
@@ -186,7 +192,7 @@ fun DashboardScreen(
                             Icon(imageVector = Icons.Default.Lock, contentDescription = null, tint = FlameOrange)
                         },
                         colors = OutlinedTextFieldDefaults.colors(
-                            focusedBorderColor = FlameOrange,
+                            focusedBorderColor = Accent,
                             unfocusedBorderColor = Charcoal700,
                             focusedTextColor = TextWhite,
                             unfocusedTextColor = TextWhite
@@ -210,7 +216,7 @@ fun DashboardScreen(
                         viewModel.setWifiNetwork(wifiSsidInput, wifiPasswordInput)
                         wifiSavedNotice = true
                     },
-                    colors = ButtonDefaults.buttonColors(containerColor = FlameOrange, contentColor = TextWhite)
+                    colors = ButtonDefaults.buttonColors(containerColor = Accent, contentColor = OnAccent)
                 ) {
                     Text("Save & Connect Grill", fontWeight = FontWeight.Bold)
                 }
@@ -232,36 +238,38 @@ fun DashboardScreen(
             TopAppBar(
                 title = {
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        Icon(
+                        Image(
                             painter = painterResource(id = R.drawable.ic_app_logo),
-                            contentDescription = "Vatra Smoker Pro Logo",
-                            tint = androidx.compose.ui.graphics.Color.Unspecified,
-                            modifier = Modifier.size(36.dp)
+                            contentDescription = "Vatra Smoker Pro logo",
+                            modifier = Modifier
+                                .size(44.dp)
+                                .clip(RoundedCornerShape(14.dp))
+                                .border(1.dp, Charcoal600, RoundedCornerShape(14.dp))
                         )
                         Spacer(modifier = Modifier.width(10.dp))
                         Column {
                             Text(
-                                text = "VATRA SMOKER PRO",
+                                text = "Vatra Smoker Pro",
                                 style = MaterialTheme.typography.titleMedium,
                                 fontWeight = FontWeight.ExtraBold,
                                 color = TextWhite,
-                                fontSize = 15.sp,
-                                letterSpacing = 0.5.sp,
+                                fontSize = 18.sp,
                                 maxLines = 1
                             )
-                            Row(verticalAlignment = Alignment.CenterVertically) {
-                                Icon(
-                                    imageVector = Icons.Default.HourglassBottom,
-                                    contentDescription = null,
-                                    tint = FlameAmber,
-                                    modifier = Modifier.size(13.dp)
-                                )
-                                Spacer(modifier = Modifier.width(3.dp))
+                            Row {
                                 Text(
-                                    text = "Cook Time: ${state.formattedCookDuration}",
+                                    text = "Cook time ",
                                     style = MaterialTheme.typography.bodySmall,
                                     color = TextGray,
-                                    fontSize = 11.sp
+                                    fontSize = 12.sp
+                                )
+                                Text(
+                                    text = state.formattedCookDuration,
+                                    style = MaterialTheme.typography.bodySmall,
+                                    fontFamily = FontFamily.Monospace,
+                                    color = TextWhite,
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 12.sp
                                 )
                             }
                         }
@@ -284,11 +292,11 @@ fun DashboardScreen(
             contentPadding = PaddingValues(
                 start = 16.dp,
                 end = 16.dp,
-                top = innerPadding.calculateTopPadding() + 8.dp,
+                top = 8.dp,
                 bottom = innerPadding.calculateBottomPadding() + 24.dp
             ),
             verticalArrangement = Arrangement.spacedBy(16.dp),
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier.fillMaxSize().padding(top = innerPadding.calculateTopPadding())
         ) {
             // Grill Controls Action Bar (Single Clear Power/Shutdown Control + Wi-Fi Setup)
             item {
@@ -305,17 +313,15 @@ fun DashboardScreen(
                                 viewModel.startupGrill()
                             }
                         },
-                        shape = RoundedCornerShape(12.dp),
-                        elevation = ButtonDefaults.elevatedButtonElevation(defaultElevation = 4.dp),
+                        shape = RoundedCornerShape(28.dp),
                         colors = ButtonDefaults.buttonColors(
                             containerColor = when (state.powerMode) {
                                 SmokerPowerMode.RUNNING -> AlertRed
                                 SmokerPowerMode.SHUTDOWN -> FlameAmber
-                                else -> SuccessGreen
+                                else -> Accent
                             },
-                            contentColor = TextWhite
+                            contentColor = if (state.powerMode == SmokerPowerMode.RUNNING || state.powerMode == SmokerPowerMode.SHUTDOWN) androidx.compose.ui.graphics.Color.White else OnAccent
                         ),
-                        border = BorderStroke(1.dp, Charcoal600),
                         contentPadding = PaddingValues(horizontal = 14.dp, vertical = 12.dp),
                         modifier = Modifier.weight(1.2f)
                     ) {
@@ -326,7 +332,7 @@ fun DashboardScreen(
                                 else -> Icons.Default.PowerSettingsNew
                             },
                             contentDescription = null,
-                            tint = TextWhite,
+                            tint = androidx.compose.ui.graphics.Color.Unspecified,
                             modifier = Modifier.size(22.dp)
                         )
                         Spacer(modifier = Modifier.width(8.dp))
@@ -338,7 +344,7 @@ fun DashboardScreen(
                                     else -> "Start Smoker"
                                 },
                                 fontWeight = FontWeight.ExtraBold,
-                                color = TextWhite,
+                                color = androidx.compose.ui.graphics.Color.Unspecified,
                                 style = MaterialTheme.typography.labelLarge
                             )
                             Text(
@@ -347,7 +353,7 @@ fun DashboardScreen(
                                     SmokerPowerMode.SHUTDOWN -> "Fan cooling firepot"
                                     else -> "Ignite & preheat grill"
                                 },
-                                color = TextWhite.copy(alpha = 0.9f),
+                                color = androidx.compose.ui.graphics.Color.Unspecified,
                                 fontSize = 10.sp,
                                 fontWeight = FontWeight.Normal
                             )
@@ -357,8 +363,8 @@ fun DashboardScreen(
                     // Set Grill Network Button
                     OutlinedButton(
                         onClick = { showWifiDialog = true },
-                        shape = RoundedCornerShape(12.dp),
-                        border = BorderStroke(1.dp, if (state.wifiConnected) SuccessGreen else FlameOrange),
+                        shape = RoundedCornerShape(28.dp),
+                        border = BorderStroke(1.dp, if (state.wifiConnected) SuccessGreen else Charcoal600),
                         colors = ButtonDefaults.outlinedButtonColors(
                             containerColor = Charcoal800,
                             contentColor = TextWhite
@@ -369,7 +375,7 @@ fun DashboardScreen(
                         Icon(
                             imageVector = Icons.Default.Wifi,
                             contentDescription = null,
-                            tint = if (state.wifiConnected) SuccessGreen else FlameOrange,
+                            tint = if (state.wifiConnected) SuccessGreen else TextWhite,
                             modifier = Modifier.size(20.dp)
                         )
                         Spacer(modifier = Modifier.width(6.dp))
@@ -392,7 +398,7 @@ fun DashboardScreen(
             // Main Grill Temperature Control
             item {
                 Card(
-                    shape = RoundedCornerShape(20.dp),
+                    shape = RoundedCornerShape(28.dp),
                     elevation = CardDefaults.elevatedCardElevation(defaultElevation = 4.dp),
                     colors = CardDefaults.cardColors(containerColor = Charcoal800),
                     border = BorderStroke(1.dp, Charcoal600),
@@ -430,10 +436,10 @@ fun DashboardScreen(
                                     onClick = { pendingTempF = temp },
                                     shape = RoundedCornerShape(8.dp),
                                     colors = ButtonDefaults.outlinedButtonColors(
-                                        containerColor = if (isSelected) FlameOrange else Charcoal700,
-                                        contentColor = TextWhite
+                                        containerColor = if (isSelected) Accent else Charcoal700,
+                                        contentColor = if (isSelected) OnAccent else TextWhite
                                     ),
-                                    border = BorderStroke(1.dp, if (isSelected) FlameAmber else Charcoal700),
+                                    border = BorderStroke(1.dp, if (isSelected) Accent else Charcoal700),
                                     contentPadding = PaddingValues(horizontal = 10.dp, vertical = 4.dp)
                                 ) {
                                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
@@ -445,7 +451,7 @@ fun DashboardScreen(
                                         Text(
                                             text = label,
                                             style = MaterialTheme.typography.labelSmall,
-                                            color = if (isSelected) TextWhite else TextGray,
+                                            color = if (isSelected) OnAccent else TextGray,
                                             fontSize = 10.sp
                                         )
                                     }
@@ -581,7 +587,7 @@ private fun ConfirmBar(label: String, onConfirm: () -> Unit, onCancel: () -> Uni
         Button(
             onClick = onConfirm,
             shape = RoundedCornerShape(12.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = FlameOrange, contentColor = TextWhite),
+            colors = ButtonDefaults.buttonColors(containerColor = Accent, contentColor = OnAccent),
             modifier = Modifier.weight(2f)
         ) {
             Text(label, fontWeight = FontWeight.Bold, maxLines = 1)

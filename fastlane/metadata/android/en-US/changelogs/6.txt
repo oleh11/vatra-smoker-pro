@@ -1,0 +1,1 @@
+New look: ObminFX-style design with light and dark themes (follows your phone), new logo and app icon. Everything works as before.

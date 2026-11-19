@@ -1,35 +1,31 @@
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="48dp"
-    android:height="48dp"
-    android:viewportWidth="48"
-    android:viewportHeight="48">
-    
-    <!-- Background Circle -->
+    android:width="64dp"
+    android:height="64dp"
+    android:viewportWidth="1024"
+    android:viewportHeight="1024">
     <path
-        android:pathData="M24,24m-22,0a22,22 0,1,1 44,0a22,22 0,1,1 -44,0"
-        android:fillColor="#211E1C" />
+        android:pathData="M224,0 L800,0 A224,224 0 0 1 1024,224 L1024,800 A224,224 0 0 1 800,1024 L224,1024 A224,224 0 0 1 0,800 L0,224 A224,224 0 0 1 224,0 Z"
+        android:fillColor="#0E1013" />
+    <!-- handle -->
     <path
-        android:pathData="M24,24m-22,0a22,22 0,1,1 44,0a22,22 0,1,1 -44,0"
-        android:strokeWidth="1.5"
-        android:strokeColor="#FF7043" />
-
-    <!-- Rising Smoke -->
+        android:pathData="M450,264 L450,214 A22,22 0 0 1 472,192 L552,192 A22,22 0 0 1 574,214 L574,264"
+        android:strokeColor="#FFFFFF" android:strokeWidth="28"
+        android:strokeLineCap="round" android:strokeLineJoin="round" />
+    <!-- dome lid -->
     <path
-        android:pathData="M29,14 C30,11 29,9 31,7"
-        android:strokeWidth="1.5"
-        android:strokeColor="#B0BEC5"
-        android:strokeLineCap="round" />
-
-    <!-- Smoker Silhouette -->
+        android:pathData="M294,474 Q278,474 279,458 A233,228 0 0 1 745,458 Q746,474 730,474 Z"
+        android:fillColor="#FFFFFF" />
+    <!-- bowl with firebox cutout -->
     <path
-        android:pathData="M14,18 L32,18 C35,18 37,20 37,24 L37,26 C37,30 34,33 30,33 L16,33 C12,33 10,30 10,26 L10,24 C10,20 12,18 14,18 Z"
-        android:fillColor="#37474F" />
-
-    <!-- Flame Core -->
+        android:pathData="M294,510 L404,510 Q420,510 420,526 L420,572 A92,92 0 0 0 604,572 L604,526 Q604,510 620,510 L730,510 Q746,510 744,526 A232,218 0 0 1 280,526 Q278,510 294,510 Z"
+        android:fillColor="#FFFFFF" />
+    <!-- legs -->
+    <path android:pathData="M414,700 L362,818" android:strokeColor="#FFFFFF"
+        android:strokeWidth="40" android:strokeLineCap="round" />
+    <path android:pathData="M610,700 L662,818" android:strokeColor="#FFFFFF"
+        android:strokeWidth="40" android:strokeLineCap="round" />
+    <!-- ember flame -->
     <path
-        android:pathData="M23,24 C21,26 20,28 20,29.5 C20,31.5 21.5,33 23,33 C24.5,33 26,31.5 26,29.5 C26,28 25,26 23,24 Z"
-        android:fillColor="#FF5722" />
-    <path
-        android:pathData="M23,27 C22,28.5 21.5,29.5 21.5,30.5 C21.5,31.5 22.2,32.2 23,32.2 C23.8,32.2 24.5,31.5 24.5,30.5 C24.5,29.5 24,28.5 23,27 Z"
-        android:fillColor="#FFD54F" />
+        android:pathData="M520,494 C510,518 532,536 550,554 C562,566 565,578 565,592 A53,49 0 0 1 459,592 C459,565 473,546 484,532 C482,544 487,553 495,556 C492,532 503,508 520,494 Z"
+        android:fillColor="#FF5A1F" />
 </vector>
