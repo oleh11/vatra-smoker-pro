@@ -9,6 +9,10 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
+import com.oleh11.vatrasmoker.ui.components.WalkthroughDialog
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -47,6 +51,16 @@ fun AppNavigation() {
     val context = LocalContext.current
     val repository = (context.applicationContext as SmokerApp).repository
     val provisioner = WifiProvisioner(context)
+
+    // First-launch guide (skippable, shown once, reopenable from Settings)
+    val prefs = remember { context.getSharedPreferences("settings", android.content.Context.MODE_PRIVATE) }
+    var showTour by remember { mutableStateOf(!prefs.getBoolean("tour_done", false)) }
+    if (showTour) {
+        WalkthroughDialog(onFinished = {
+            prefs.edit().putBoolean("tour_done", true).apply()
+            showTour = false
+        })
+    }
 
     Scaffold(
         bottomBar = {
@@ -150,7 +164,7 @@ fun AppNavigation() {
                 val vm: SettingsViewModel = viewModel(
                     factory = SettingsViewModel.Factory(repository, context)
                 )
-                SettingsScreen(viewModel = vm)
+                SettingsScreen(viewModel = vm, onShowTour = { showTour = true })
             }
         }
     }

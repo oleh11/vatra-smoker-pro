@@ -17,7 +17,12 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Thermostat
 import androidx.compose.material.icons.filled.DeviceHub
+import androidx.compose.material.icons.filled.Feedback
+import androidx.compose.material.icons.filled.HelpOutline
 import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.Share
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Science
 import androidx.compose.material.icons.filled.Thermostat
@@ -55,7 +60,8 @@ import com.oleh11.vatrasmoker.ui.theme.TextWhite
 @Composable
 fun SettingsScreen(
     viewModel: SettingsViewModel,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onShowTour: () -> Unit = {}
 ) {
     val smokerState by viewModel.smokerState.collectAsState()
     val isSimulatorMode by viewModel.isSimulatorMode.collectAsState()
@@ -203,6 +209,63 @@ fun SettingsScreen(
                 }
             }
 
+            // Privacy assurance (static, nothing is collected)
+            item {
+                SettingsInfoCard(
+                    icon = Icons.Default.Lock,
+                    title = "Private by design",
+                    subtitle = "No ads, no accounts, no tracking and no internet permission. Everything stays between your phone and your grill."
+                )
+            }
+
+            // Help, share, rate, feedback (all opt-in buttons, nothing is sent or tracked)
+            item {
+                SettingsActionCard(
+                    icon = Icons.Default.HelpOutline,
+                    title = "How to use the app",
+                    subtitle = "Quick guide: connect, set temperature and smoke",
+                    onClick = onShowTour
+                )
+            }
+            item {
+                SettingsActionCard(
+                    icon = Icons.Default.Share,
+                    title = "Share the app",
+                    subtitle = "Send a link to friends who also have a pellet grill",
+                    onClick = {
+                        val send = android.content.Intent(android.content.Intent.ACTION_SEND).apply {
+                            type = "text/plain"
+                            putExtra(android.content.Intent.EXTRA_SUBJECT, "Vatra Smoker Pro")
+                            putExtra(
+                                android.content.Intent.EXTRA_TEXT,
+                                "Vatra Smoker Pro is a free, open-source app to control a Camp Chef-based pellet grill " +
+                                    "(including the Cabela's Pro Series) over Bluetooth. No ads, no tracking.\n" + GITHUB_URL
+                            )
+                        }
+                        appContext.startActivity(
+                            android.content.Intent.createChooser(send, "Share Vatra Smoker Pro")
+                                .addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK)
+                        )
+                    }
+                )
+            }
+            item {
+                SettingsActionCard(
+                    icon = Icons.Default.Star,
+                    title = "Rate on Google Play",
+                    subtitle = "Your review helps other grillers find the app",
+                    onClick = { openLink(appContext, PLAY_URL) }
+                )
+            }
+            item {
+                SettingsActionCard(
+                    icon = Icons.Default.Feedback,
+                    title = "Send feedback",
+                    subtitle = "Report a problem or suggest a feature on GitHub",
+                    onClick = { openLink(appContext, "$GITHUB_URL/issues") }
+                )
+            }
+
             // Hardware & Info Card
             item {
                 Card(
@@ -254,5 +317,71 @@ private fun InfoRow(label: String, value: String) {
     ) {
         Text(text = label, style = MaterialTheme.typography.bodySmall, color = TextGray)
         Text(text = value, style = MaterialTheme.typography.bodySmall, color = TextWhite, fontWeight = FontWeight.SemiBold)
+    }
+}
+
+private const val GITHUB_URL = "https://github.com/oleh11/vatra-smoker-pro"
+private const val PLAY_URL = "https://play.google.com/store/apps/details?id=com.oleh11.vatrasmoker"
+
+private fun openLink(context: android.content.Context, url: String) {
+    try {
+        context.startActivity(
+            android.content.Intent(android.content.Intent.ACTION_VIEW, android.net.Uri.parse(url))
+                .addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK)
+        )
+    } catch (e: Exception) {
+        // No browser or Play Store available: nothing to do
+    }
+}
+
+@Composable
+private fun SettingsInfoCard(icon: androidx.compose.ui.graphics.vector.ImageVector, title: String, subtitle: String) {
+    Card(
+        shape = RoundedCornerShape(16.dp),
+        elevation = CardDefaults.elevatedCardElevation(defaultElevation = 4.dp),
+        colors = CardDefaults.cardColors(containerColor = Charcoal800),
+        border = BorderStroke(1.dp, Charcoal600),
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.fillMaxWidth().padding(16.dp)
+        ) {
+            Icon(imageVector = icon, contentDescription = null, tint = FlameOrange, modifier = Modifier.size(24.dp))
+            Spacer(modifier = Modifier.width(12.dp))
+            Column(modifier = Modifier.weight(1f)) {
+                Text(title, style = MaterialTheme.typography.titleMedium, color = TextWhite, fontWeight = FontWeight.Bold)
+                Text(subtitle, style = MaterialTheme.typography.bodySmall, color = TextGray)
+            }
+        }
+    }
+}
+
+@Composable
+private fun SettingsActionCard(
+    icon: androidx.compose.ui.graphics.vector.ImageVector,
+    title: String,
+    subtitle: String,
+    onClick: () -> Unit
+) {
+    Card(
+        onClick = onClick,
+        shape = RoundedCornerShape(16.dp),
+        elevation = CardDefaults.elevatedCardElevation(defaultElevation = 4.dp),
+        colors = CardDefaults.cardColors(containerColor = Charcoal800),
+        border = BorderStroke(1.dp, Charcoal600),
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.fillMaxWidth().padding(16.dp)
+        ) {
+            Icon(imageVector = icon, contentDescription = null, tint = FlameOrange, modifier = Modifier.size(24.dp))
+            Spacer(modifier = Modifier.width(12.dp))
+            Column(modifier = Modifier.weight(1f)) {
+                Text(title, style = MaterialTheme.typography.titleMedium, color = TextWhite, fontWeight = FontWeight.Bold)
+                Text(subtitle, style = MaterialTheme.typography.bodySmall, color = TextGray)
+            }
+        }
     }
 }

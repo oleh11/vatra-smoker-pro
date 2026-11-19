@@ -1,29 +1,39 @@
-<b>Vatra Smoker Pro</b> is a free, open-source companion app for Camp Chef-based Wi-Fi pellet grills, including the Cabela's Pro Series 36". It connects directly over Bluetooth, with no account and no cloud.
+<b>Vatra Smoker Pro</b> is a free, open-source Bluetooth controller for Camp Chef-based Wi-Fi pellet grills and smokers, including the Cabela's Pro Series 36". Set the grill temperature and smoke level from your phone, watch the cook live, and skip accounts, cloud and ads.
+
+<b>Who it's for</b>
+<ul>
+<li>Backyard pitmasters running a pellet grill or smoker for brisket, pork shoulder, ribs, turkey, salmon or steaks</li>
+<li>Owners who want a simple, private app instead of an account-based one</li>
+<li>Anyone who wants to try pellet grill controls first with the built-in simulator</li>
+</ul>
 
 <b>Control your grill</b>
 <ul>
-<li>Start up, shut down and set the target temperature</li>
-<li>Adjust the smoke level</li>
+<li>Start up, shut down, set the target temperature and the smoke level</li>
+<li>Changes are sent only after you press Confirm</li>
 <li>Send your home Wi-Fi details to the grill over Bluetooth</li>
 </ul>
 
 <b>Watch the cook</b>
 <ul>
-<li>Live chamber temperature and up to four meat probes</li>
+<li>Live grill chamber temperature and a live cook chart</li>
 <li>Fault messages from the grill</li>
-<li>Live temperature chart for the whole cook</li>
+<li>Optional meat probes (up to four) with target temperatures. Turn them off in Settings to see only grill temperature and smoke level.</li>
 </ul>
 
 <b>Cook planner</b>
 <ul>
 <li>Presets for brisket, pork shoulder, 3-2-1 ribs, salmon, turkey and reverse-sear steaks</li>
-<li>Built-in simulator to try the app without a grill</li>
+<li>Built-in grill simulator and a quick guide for first-time users</li>
 </ul>
 
 <b>Private by design</b>
 <ul>
 <li>No ads, no analytics, no accounts, no internet access</li>
+<li>Only Bluetooth and Wi-Fi setup permissions, nothing in the background</li>
 <li>Everything stays between your phone and your grill</li>
 </ul>
+
+Open source: https://github.com/oleh11/vatra-smoker-pro
 
 This is an independent project. It is not affiliated with or endorsed by Cabela's or Camp Chef. Names are used only to describe compatible hardware.
