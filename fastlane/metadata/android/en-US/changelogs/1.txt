@@ -1,0 +1,1 @@
+First release: Bluetooth connection with automatic retry and reconnect, pairing support, live temperatures, probe alarms, cook planner and simulator.

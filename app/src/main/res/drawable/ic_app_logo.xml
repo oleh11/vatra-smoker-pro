@@ -1,0 +1,35 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="48dp"
+    android:height="48dp"
+    android:viewportWidth="48"
+    android:viewportHeight="48">
+    
+    <!-- Background Circle -->
+    <path
+        android:pathData="M24,24m-22,0a22,22 0,1,1 44,0a22,22 0,1,1 -44,0"
+        android:fillColor="#211E1C" />
+    <path
+        android:pathData="M24,24m-22,0a22,22 0,1,1 44,0a22,22 0,1,1 -44,0"
+        android:strokeWidth="1.5"
+        android:strokeColor="#FF7043" />
+
+    <!-- Rising Smoke -->
+    <path
+        android:pathData="M29,14 C30,11 29,9 31,7"
+        android:strokeWidth="1.5"
+        android:strokeColor="#B0BEC5"
+        android:strokeLineCap="round" />
+
+    <!-- Smoker Silhouette -->
+    <path
+        android:pathData="M14,18 L32,18 C35,18 37,20 37,24 L37,26 C37,30 34,33 30,33 L16,33 C12,33 10,30 10,26 L10,24 C10,20 12,18 14,18 Z"
+        android:fillColor="#37474F" />
+
+    <!-- Flame Core -->
+    <path
+        android:pathData="M23,24 C21,26 20,28 20,29.5 C20,31.5 21.5,33 23,33 C24.5,33 26,31.5 26,29.5 C26,28 25,26 23,24 Z"
+        android:fillColor="#FF5722" />
+    <path
+        android:pathData="M23,27 C22,28.5 21.5,29.5 21.5,30.5 C21.5,31.5 22.2,32.2 23,32.2 C23.8,32.2 24.5,31.5 24.5,30.5 C24.5,29.5 24,28.5 23,27 Z"
+        android:fillColor="#FFD54F" />
+</vector>

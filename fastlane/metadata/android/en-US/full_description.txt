@@ -1,0 +1,30 @@
+<b>Ватра Smoker Pro</b> is a free, open-source companion app for Camp Chef-based Wi-Fi pellet grills, including the Cabela's Pro Series 36". It connects directly over Bluetooth, with no account and no cloud.
+
+<b>Control your grill</b>
+<ul>
+<li>Start up, shut down and set the target temperature</li>
+<li>Adjust the smoke level</li>
+<li>Send your home Wi-Fi details to the grill over Bluetooth</li>
+</ul>
+
+<b>Watch the cook</b>
+<ul>
+<li>Live chamber temperature and up to four meat probes</li>
+<li>Pellet hopper level and fault messages</li>
+<li>Live temperature chart for the whole cook</li>
+<li>Alarm and notification when a probe reaches its target, even with the screen off</li>
+</ul>
+
+<b>Cook planner</b>
+<ul>
+<li>Presets for brisket, pork shoulder, 3-2-1 ribs, salmon, turkey and reverse-sear steaks</li>
+<li>Built-in simulator to try the app without a grill</li>
+</ul>
+
+<b>Private by design</b>
+<ul>
+<li>No ads, no analytics, no accounts, no internet access</li>
+<li>Everything stays between your phone and your grill</li>
+</ul>
+
+This is an independent project. It is not affiliated with or endorsed by Cabela's or Camp Chef. Names are used only to describe compatible hardware.

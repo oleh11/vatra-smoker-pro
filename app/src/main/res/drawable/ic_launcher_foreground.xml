@@ -1,0 +1,87 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <!-- 1. Rising Wood Smoke Ribbon Trails (Top) -->
+    <path
+        android:pathData="M66,32 C68,26 65,22 69,18 C71,15 75,15 76,12"
+        android:strokeWidth="2.5"
+        android:strokeColor="#78909C"
+        android:strokeLineCap="round" />
+    <path
+        android:pathData="M69,30 C72,24 70,20 75,16 C78,13 80,12 82,10"
+        android:strokeWidth="1.8"
+        android:strokeColor="#B0BEC5"
+        android:strokeLineCap="round" />
+
+    <!-- 2. Chimney Stack & Cap -->
+    <path
+        android:pathData="M64,32 L70,32 L69,40 L65,40 Z"
+        android:fillColor="#37474F" />
+    <path
+        android:pathData="M62,31 L72,31 L72,29 L62,29 Z"
+        android:fillColor="#FF7043" />
+
+    <!-- 3. Main Smoker Barrel Drum (Horizontal Barrel with Round Ends) -->
+    <!-- Smoker Barrel Body -->
+    <path
+        android:pathData="M32,42 L72,42 C77,42 81,46 81,52 L81,56 C81,64 75,70 68,70 L36,70 C29,70 23,64 23,56 L23,52 C23,46 27,42 32,42 Z"
+        android:fillColor="#263238" />
+
+    <!-- Smoker Lid Seam & Chrome Handle -->
+    <path
+        android:pathData="M25,53 L79,53"
+        android:strokeWidth="1.5"
+        android:strokeColor="#455A64" />
+    <path
+        android:pathData="M44,48 L60,48"
+        android:strokeWidth="3"
+        android:strokeColor="#ECEFF1"
+        android:strokeLineCap="round" />
+
+    <!-- 4. Hopper Box (Left Side Pellet Hopper) -->
+    <path
+        android:pathData="M18,46 L25,46 L25,66 L18,66 Z"
+        android:fillColor="#37474F" />
+    <path
+        android:pathData="M17,45 L26,45"
+        android:strokeWidth="2"
+        android:strokeColor="#FF7043"
+        android:strokeLineCap="round" />
+
+    <!-- 5. Smoker Stand & Wheels -->
+    <!-- Left Leg / Stand -->
+    <path
+        android:pathData="M28,70 L24,84"
+        android:strokeWidth="2.5"
+        android:strokeColor="#455A64"
+        android:strokeLineCap="round" />
+    <!-- Right Leg / Wheel Axle -->
+    <path
+        android:pathData="M68,70 L72,84"
+        android:strokeWidth="2.5"
+        android:strokeColor="#455A64"
+        android:strokeLineCap="round" />
+    <!-- Bottom Shelf Wire Rack -->
+    <path
+        android:pathData="M26,78 L70,78"
+        android:strokeWidth="2"
+        android:strokeColor="#37474F" />
+    <!-- Wheels -->
+    <path
+        android:pathData="M72,86m-4,0a4,4 0,1,1 8,0a4,4 0,1,1 -8,0"
+        android:fillColor="#FF7043" />
+    <path
+        android:pathData="M24,86m-3,0a3,3 0,1,1 6,0a3,3 0,1,1 -6,0"
+        android:fillColor="#546E7A" />
+
+    <!-- 6. Glowing Flame Emblem in Firebox Core (Center of Grill) -->
+    <path
+        android:pathData="M52,55 C48,60 46,63 46,66 C46,70 49,73 52,73 C55,73 58,70 58,66 C58,63 56,60 52,55 Z"
+        android:fillColor="#FF3D00" />
+    <path
+        android:pathData="M52,60 C50,63 49,65 49,67 C49,69 50,71 52,71 C54,71 55,69 55,67 C55,65 54,63 52,60 Z"
+        android:fillColor="#FFD600" />
+</vector>

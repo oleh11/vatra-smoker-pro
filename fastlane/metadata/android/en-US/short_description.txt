@@ -1,0 +1,1 @@
+Free, open-source pellet grill controller and probe monitor over Bluetooth. No ads, no tracking.
