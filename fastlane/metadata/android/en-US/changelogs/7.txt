@@ -1,0 +1,1 @@
+Faster animations: quicker screen transitions and gauge movement.

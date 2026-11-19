@@ -104,6 +104,10 @@ fun AppNavigation() {
         NavHost(
             navController = navController,
             startDestination = Screen.Dashboard.route,
+            enterTransition = { androidx.compose.animation.fadeIn(androidx.compose.animation.core.tween(120)) },
+            exitTransition = { androidx.compose.animation.fadeOut(androidx.compose.animation.core.tween(80)) },
+            popEnterTransition = { androidx.compose.animation.fadeIn(androidx.compose.animation.core.tween(120)) },
+            popExitTransition = { androidx.compose.animation.fadeOut(androidx.compose.animation.core.tween(80)) },
             modifier = Modifier.padding(innerPadding).consumeWindowInsets(innerPadding)
         ) {
             composable(Screen.Dashboard.route) {

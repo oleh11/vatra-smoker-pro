@@ -65,7 +65,7 @@ fun RadialTempGauge(
 ) {
     val animatedCurrentTemp by animateFloatAsState(
         targetValue = currentTempF.toFloat(),
-        animationSpec = tween(durationMillis = 800),
+        animationSpec = tween(durationMillis = 250),
         label = "currentTempAnim"
     )
 
