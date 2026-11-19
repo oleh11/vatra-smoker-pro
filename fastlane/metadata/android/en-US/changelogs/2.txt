@@ -1,0 +1,1 @@
+Targets Android 16 (API 36) and fixes the app name.
