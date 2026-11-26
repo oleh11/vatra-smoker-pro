@@ -105,6 +105,20 @@ object SmokerPacketCodec {
         }
     }
 
+    // Checks used to confirm a command by reading the MODE characteristic back
+
+    fun modeHasTargetTemp(mode: ByteArray, tempF: Int): Boolean =
+        mode.size >= 4 && mode[0] == MODE_RUN && ByteBuffer.wrap(mode).getShort(1).toInt() == tempF.coerceIn(150, 500)
+
+    fun modeHasSmokeLevel(mode: ByteArray, level: Int): Boolean =
+        mode.size >= 4 && mode[0] == MODE_RUN && (mode[3].toInt() and 0xFF) == level.coerceIn(1, 10)
+
+    fun modeIsRunning(mode: ByteArray): Boolean = mode.isNotEmpty() && mode[0] == MODE_RUN
+
+    /** Shut down shows as standby, or fan only while the grill cools. */
+    fun modeIsShuttingDown(mode: ByteArray): Boolean =
+        mode.isNotEmpty() && (mode[0] == MODE_STANDBY || mode[0] == MODE_FAN)
+
     /** Parses the MODE characteristic (GrillMode). */
     fun parseModePacket(bytes: ByteArray, currentState: SmokerState): SmokerState {
         if (bytes.isEmpty()) return currentState

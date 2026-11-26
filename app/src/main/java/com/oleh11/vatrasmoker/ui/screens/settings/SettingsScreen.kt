@@ -1,5 +1,13 @@
 package com.oleh11.vatrasmoker.ui.screens.settings
 
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.core.content.ContextCompat
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.compose.rememberLauncherForActivityResult
+import android.os.Build
+import android.content.pm.PackageManager
+import android.Manifest
 import com.oleh11.vatrasmoker.ui.theme.ThemeSettings
 import com.oleh11.vatrasmoker.ui.theme.ThemeMode
 import androidx.compose.foundation.layout.Box
@@ -74,6 +82,12 @@ fun SettingsScreen(
     val isSimulatorMode by viewModel.isSimulatorMode.collectAsState()
     val showMeatProbes by viewModel.showMeatProbes.collectAsState()
     val appContext = androidx.compose.ui.platform.LocalContext.current
+    val liveNotification by viewModel.liveNotification.collectAsState()
+    var notificationsBlocked by remember { mutableStateOf(false) }
+    val notificationPermission = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
+        notificationsBlocked = !granted
+        viewModel.setLiveNotification(granted)
+    }
     val appVersion = remember {
         try {
             appContext.packageManager.getPackageInfo(appContext.packageName, 0).versionName ?: "1.0"
@@ -202,6 +216,65 @@ fun SettingsScreen(
                                 }
                             }
                         }
+                    }
+                }
+            }
+
+            // Ongoing grill status notification
+            item {
+                Card(
+                    shape = RoundedCornerShape(28.dp),
+                    elevation = CardDefaults.elevatedCardElevation(defaultElevation = 4.dp),
+                    colors = CardDefaults.cardColors(containerColor = Charcoal800),
+                    border = BorderStroke(1.dp, Charcoal600),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.fillMaxWidth().padding(16.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Notifications,
+                            contentDescription = null,
+                            tint = FlameOrange,
+                            modifier = Modifier.size(24.dp)
+                        )
+                        Spacer(modifier = Modifier.width(12.dp))
+                        Column(modifier = Modifier.weight(1f)) {
+                            Text(
+                                text = "Grill Status Notification",
+                                style = MaterialTheme.typography.titleMedium,
+                                color = TextWhite,
+                                fontWeight = FontWeight.Bold
+                            )
+                            Text(
+                                text = if (notificationsBlocked) {
+                                    "Notifications are blocked. Allow them for this app in Android Settings."
+                                } else {
+                                    "While the grill is on, show grill temp, set temp and smoke level in your notifications."
+                                },
+                                style = MaterialTheme.typography.bodySmall,
+                                color = TextGray
+                            )
+                        }
+                        Switch(
+                            checked = liveNotification,
+                            onCheckedChange = { enabled ->
+                                val needsPermission = enabled && Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+                                    ContextCompat.checkSelfPermission(appContext, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED
+                                if (needsPermission) {
+                                    notificationPermission.launch(Manifest.permission.POST_NOTIFICATIONS)
+                                } else {
+                                    notificationsBlocked = false
+                                    viewModel.setLiveNotification(enabled)
+                                }
+                            },
+                            colors = SwitchDefaults.colors(
+                                checkedThumbColor = OnAccent,
+                                checkedTrackColor = Accent,
+                                uncheckedTrackColor = Charcoal700
+                            )
+                        )
                     }
                 }
             }

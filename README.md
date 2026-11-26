@@ -25,6 +25,7 @@
 
 - **Control:** start up, shut down, set target temperature and smoke level (changes are sent only after you press Confirm).
 - **Monitor:** chamber temperature, four meat probes (optional), faults and a live cook chart.
+- **Status notification (optional):** grill temperature, set temperature and smoke level while the grill is on.
 - **Reliable connection:** 15 s timeout, automatic retry on Bluetooth error 133, auto-reconnect, and in-app pairing when the grill requires it.
 - **Wi-Fi setup:** send your home network to the grill over Bluetooth.
 - **Cook planner:** brisket, pork shoulder, 3-2-1 ribs, salmon, turkey and reverse-sear presets.

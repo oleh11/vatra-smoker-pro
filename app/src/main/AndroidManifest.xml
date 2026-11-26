@@ -32,6 +32,11 @@
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
 
 
+    <!-- Opt-in grill status notification while the grill is on -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_CONNECTED_DEVICE" />
+
     <!-- BLE feature declaration -->
     <uses-feature
         android:name="android.hardware.bluetooth_le"
@@ -61,7 +66,10 @@
             </intent-filter>
         </activity>
 
-
+        <service
+            android:name=".service.GrillStatusService"
+            android:exported="false"
+            android:foregroundServiceType="connectedDevice" />
     </application>
 
 </manifest>

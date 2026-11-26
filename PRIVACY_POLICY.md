@@ -11,8 +11,10 @@ Vatra Smoker Pro ("the App") is a free, open-source companion app for Bluetooth 
 - **Nearby devices (Bluetooth):** to find and talk to your grill. On Android 11 and older, Android ties Bluetooth scanning to the location permission; the App does not read or use your location.
 - **Wi-Fi permissions:** to let you send your home Wi-Fi name and password to the grill. They go straight from your phone to the grill over Bluetooth and are not saved or sent anywhere else.
 
+- **Notifications and foreground service:** used only if you turn on the grill status notification, to keep it up to date while the grill is on.
+
 ## Data on your device
-Temperatures and cook history stay in the App's memory and are cleared when you close the App. The App saves one preference (whether to show meat probes) on your phone only; clear the App data in Android Settings to remove it.
+Temperatures and cook history stay in the App's memory and are cleared when you close the App. The App saves a few preferences (such as whether to show meat probes and the status notification) on your phone only; clear the App data in Android Settings to remove it.
 
 ## Children
 The App does not knowingly collect data from anyone, including children.

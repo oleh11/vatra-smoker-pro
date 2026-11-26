@@ -8,6 +8,7 @@ import com.oleh11.vatrasmoker.data.model.MeatProbe
 import com.oleh11.vatrasmoker.data.model.SmokerPowerMode
 import com.oleh11.vatrasmoker.data.model.SmokerState
 import com.oleh11.vatrasmoker.data.model.TemperatureUnit
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
 
 interface SmokerRepository {
@@ -18,6 +19,10 @@ interface SmokerRepository {
     val isSimulatorMode: StateFlow<Boolean>
     val showMeatProbes: StateFlow<Boolean>
     fun setShowMeatProbes(enabled: Boolean)
+    /** One message for each change sent to the grill, saying whether it worked. */
+    val changeMessages: Flow<String>
+    val liveNotification: StateFlow<Boolean>
+    fun setLiveNotification(enabled: Boolean)
 
     // Diagnostics & Debugging
     val debugLogs: StateFlow<List<String>>

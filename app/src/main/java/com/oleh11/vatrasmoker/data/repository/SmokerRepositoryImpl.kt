@@ -4,6 +4,8 @@ import android.bluetooth.BluetoothDevice
 import android.content.Context
 import com.oleh11.vatrasmoker.data.ble.BleManager
 import com.oleh11.vatrasmoker.data.ble.DiscoveredGattInfo
+import com.oleh11.vatrasmoker.data.model.CommandResult
+import com.oleh11.vatrasmoker.data.model.ChangeMessage
 import com.oleh11.vatrasmoker.data.model.ConnectionState
 import com.oleh11.vatrasmoker.data.model.CookDataPoint
 import com.oleh11.vatrasmoker.data.model.SmokerPowerMode
@@ -11,6 +13,10 @@ import com.oleh11.vatrasmoker.data.model.SmokerState
 import com.oleh11.vatrasmoker.data.model.TemperatureUnit
 import com.oleh11.vatrasmoker.data.simulator.MockSmokerEngine
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineStart
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.delay
@@ -40,6 +46,17 @@ class SmokerRepositoryImpl(
         prefs.edit().putBoolean("show_meat_probes", enabled).apply()
     }
 
+    private val _liveNotification = MutableStateFlow(prefs.getBoolean("live_notification", false))
+    override val liveNotification: StateFlow<Boolean> = _liveNotification.asStateFlow()
+
+    override fun setLiveNotification(enabled: Boolean) {
+        _liveNotification.value = enabled
+        prefs.edit().putBoolean("live_notification", enabled).apply()
+    }
+
+    // The grill and simulator know nothing about the display unit, so it is applied to every update
+    @Volatile private var temperatureUnit = TemperatureUnit.FAHRENHEIT
+
     private val _connectionState = MutableStateFlow<ConnectionState>(ConnectionState.Disconnected)
     override val connectionState: StateFlow<ConnectionState> = _connectionState.asStateFlow()
 
@@ -60,7 +77,7 @@ class SmokerRepositoryImpl(
         scope.launch {
             bleManager.smokerState.collect { bleState ->
                 if (!_isSimulatorMode.value) {
-                    _smokerState.value = bleState
+                    _smokerState.value = bleState.copy(temperatureUnit = temperatureUnit)
                 }
             }
         }
@@ -76,7 +93,7 @@ class SmokerRepositoryImpl(
         scope.launch {
             simulatorEngine.state.collect { simState ->
                 if (_isSimulatorMode.value) {
-                    _smokerState.value = simState
+                    _smokerState.value = simState.copy(temperatureUnit = temperatureUnit)
                 }
             }
         }
@@ -142,29 +159,55 @@ class SmokerRepositoryImpl(
         if (enabled) {
             bleManager.disconnect()
             _connectionState.value = ConnectionState.SimulatorActive()
-            _smokerState.value = simulatorEngine.state.value
+            _smokerState.value = simulatorEngine.state.value.copy(temperatureUnit = temperatureUnit)
             simulatorEngine.startSimulationLoop()
         } else {
             simulatorEngine.stopSimulation()
             _connectionState.value = ConnectionState.Disconnected
-            _smokerState.value = SmokerState()
+            _smokerState.value = SmokerState(temperatureUnit = temperatureUnit)
+        }
+    }
+
+    // A channel, so a result is shown once and is kept until the screen can show it
+    private val _changeMessages = Channel<String>(Channel.BUFFERED)
+    override val changeMessages: Flow<String> = _changeMessages.receiveAsFlow()
+
+    private fun isLinked() = _connectionState.value.let {
+        it is ConnectionState.Connected || it is ConnectionState.SimulatorActive
+    }
+
+    /** Runs one change against the grill or simulator and reports how it went. */
+    private fun change(description: String, simulate: () -> Unit, send: suspend () -> CommandResult) {
+        if (!isLinked()) {
+            _changeMessages.trySend("Not connected to the grill. Nothing was changed.")
+            return
+        }
+        if (_isSimulatorMode.value) {
+            simulate()
+            _changeMessages.trySend(ChangeMessage.of(CommandResult.CONFIRMED, description, simulator = true))
+            return
+        }
+        // Undispatched: commands update the screen and queue their write in the order they were tapped
+        scope.launch(start = CoroutineStart.UNDISPATCHED) {
+            val result = send()
+            _changeMessages.trySend(ChangeMessage.of(result, description))
         }
     }
 
     override fun setTargetTemperature(tempF: Int) {
-        if (_isSimulatorMode.value) {
-            simulatorEngine.setTargetTemperature(tempF)
-        } else {
-            bleManager.setTargetTemperature(tempF)
-        }
+        change(
+            "set temperature ${temperatureUnit.format(tempF)}",
+            simulate = { simulatorEngine.setTargetTemperature(tempF) },
+            send = { bleManager.setTargetTemperature(tempF) }
+        )
     }
 
     override fun setSmokeLevel(level: Int) {
-        if (_isSimulatorMode.value) {
-            simulatorEngine.setSmokeLevel(level)
-        } else {
-            bleManager.setSmokeLevel(level)
-        }
+        change(
+            "smoke level $level",
+            simulate = { simulatorEngine.setSmokeLevel(level) },
+            send = { bleManager.setSmokeLevel(level) }
+        )
     }
 
     override fun setProbeTarget(probeId: Int, targetF: Int) {
@@ -183,28 +226,43 @@ class SmokerRepositoryImpl(
     }
 
     override fun setPowerMode(mode: SmokerPowerMode) {
-        if (_isSimulatorMode.value) {
-            simulatorEngine.setPowerMode(mode)
-        } else {
-            when (mode) {
-                SmokerPowerMode.RUNNING, SmokerPowerMode.STARTUP -> bleManager.powerStartup()
-                SmokerPowerMode.SHUTDOWN, SmokerPowerMode.OFF -> bleManager.powerShutdown()
-                else -> Unit
-            }
+        val start = when (mode) {
+            SmokerPowerMode.RUNNING, SmokerPowerMode.STARTUP -> true
+            SmokerPowerMode.SHUTDOWN, SmokerPowerMode.OFF -> false
+            else -> return
         }
+        change(
+            if (start) "start grill" else "shut down grill",
+            simulate = { simulatorEngine.setPowerMode(mode) },
+            send = { if (start) bleManager.powerStartup() else bleManager.powerShutdown() }
+        )
     }
 
     override fun setTemperatureUnit(unit: TemperatureUnit) {
+        temperatureUnit = unit
         _smokerState.value = _smokerState.value.copy(temperatureUnit = unit)
     }
 
     override fun provisionWifi(ssid: String, pass: String) {
-        if (!_isSimulatorMode.value) {
-            bleManager.provisionWifi(ssid, pass)
-        } else {
+        if (!isLinked()) {
+            _changeMessages.trySend("Not connected to the grill. Wi-Fi details were not sent.")
+            return
+        }
+        if (_isSimulatorMode.value) {
             _smokerState.value = _smokerState.value.copy(
                 wifiConnected = true,
                 wifiSsid = ssid
+            )
+            _changeMessages.trySend("Done (simulator): Wi-Fi details sent")
+            return
+        }
+        scope.launch {
+            _changeMessages.trySend(
+                if (bleManager.provisionWifi(ssid, pass)) {
+                    "\u2713 Wi-Fi details sent to the grill. Check the grill to see if it joined."
+                } else {
+                    "Wi-Fi details were not sent. Try again."
+                }
             )
         }
     }

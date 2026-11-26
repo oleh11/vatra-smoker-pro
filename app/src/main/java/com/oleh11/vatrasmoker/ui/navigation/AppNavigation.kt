@@ -9,6 +9,9 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.runtime.LaunchedEffect
 import com.oleh11.vatrasmoker.ui.components.WalkthroughDialog
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.mutableStateOf
@@ -53,6 +56,12 @@ fun AppNavigation() {
     val repository = (context.applicationContext as SmokerApp).repository
     val provisioner = WifiProvisioner(context)
 
+    // Result of each change sent to the grill, shown on whichever screen is open
+    val snackbar = remember { SnackbarHostState() }
+    LaunchedEffect(repository) {
+        repository.changeMessages.collect { snackbar.showSnackbar(it) }
+    }
+
     // First-launch guide (skippable, shown once, reopenable from Settings)
     val prefs = remember { context.getSharedPreferences("settings", android.content.Context.MODE_PRIVATE) }
     var showTour by remember { mutableStateOf(!prefs.getBoolean("tour_done", false)) }
@@ -64,6 +73,7 @@ fun AppNavigation() {
     }
 
     Scaffold(
+        snackbarHost = { SnackbarHost(snackbar) },
         bottomBar = {
             NavigationBar(
                 containerColor = Charcoal800,

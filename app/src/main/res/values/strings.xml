@@ -27,8 +27,6 @@
     <string name="pellet_low">Low Pellets Alert!</string>
     
     <!-- Notification strings -->
-    <string name="notif_channel_name">Cook Monitoring</string>
-    <string name="notif_channel_desc">Shows real-time grill and probe temperatures during active cooks</string>
-    <string name="notif_alarm_channel_name">Target Temperature Alarms</string>
-    <string name="notif_alarm_channel_desc">Audible alerts when meat probes reach target temperatures</string>
+    <string name="notif_channel_name">Grill status</string>
+    <string name="notif_channel_desc">Grill temperature, set temperature and smoke level while the grill is on</string>
 </resources>

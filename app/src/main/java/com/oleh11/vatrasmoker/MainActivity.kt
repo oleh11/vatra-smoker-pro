@@ -20,6 +20,11 @@ import com.oleh11.vatrasmoker.ui.theme.ThemeSettings
 
 class MainActivity : ComponentActivity() {
 
+    override fun onResume() {
+        super.onResume()
+        (application as SmokerApp).syncStatusNotification()
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()

@@ -21,6 +21,7 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.os.Build
 import android.util.Log
+import com.oleh11.vatrasmoker.data.model.CommandResult
 import com.oleh11.vatrasmoker.data.model.ConnectionState
 import com.oleh11.vatrasmoker.data.model.MeatProbe
 import com.oleh11.vatrasmoker.data.model.PelletHopperState
@@ -120,6 +121,8 @@ class BleManager(
         const val MAX_RETRIES = 4
         const val CONNECT_TIMEOUT_MS = 15_000L
         const val POLL_INTERVAL_MS = 5_000L
+        const val CONFIRM_ATTEMPTS = 4
+        const val CONFIRM_DELAY_MS = 500L
         const val BOND_TIMEOUT_MS = 30_000L
         const val STATUS_INSUFFICIENT_AUTH = 5
         const val STATUS_INSUFFICIENT_ENCRYPTION = 15
@@ -782,52 +785,102 @@ class BleManager(
         sendCommand(bytes)
     }
 
-    fun setTargetTemperature(tempF: Int) {
+    /**
+     * Writes a MODE command, then reads MODE back until the grill reports the new setting.
+     * [revert] undoes the optimistic screen update if the write never got through.
+     */
+    private suspend fun sendConfirmed(
+        payload: ByteArray,
+        matches: (ByteArray) -> Boolean,
+        revert: (SmokerState) -> SmokerState
+    ): CommandResult {
+        val gatt = activeGatt
+        val char = modeCharacteristic
+        if (gatt == null || char == null || writeChar(gatt, char, payload)?.status != BluetoothGatt.GATT_SUCCESS) {
+            logDebug("❌ Command ${payload.toHex()} did not reach the grill")
+            _smokerState.value = revert(_smokerState.value)
+            return CommandResult.FAILED
+        }
+        if ((char.properties and BluetoothGattCharacteristic.PROPERTY_READ) == 0) return CommandResult.UNCONFIRMED
+
+        var reported: ByteArray? = null
+        repeat(CONFIRM_ATTEMPTS) {
+            delay(CONFIRM_DELAY_MS)
+            if (gatt !== activeGatt) return CommandResult.UNCONFIRMED
+            val read = readChar(gatt, char)
+            val value = read?.value
+            if (read?.status == BluetoothGatt.GATT_SUCCESS && value != null) {
+                reported = value
+                if (matches(value)) {
+                    _smokerState.value = SmokerPacketCodec.parseModePacket(value, _smokerState.value)
+                    return CommandResult.CONFIRMED
+                }
+            }
+        }
+        // Show what the grill says rather than what we asked for
+        reported?.let { _smokerState.value = SmokerPacketCodec.parseModePacket(it, _smokerState.value) }
+        return CommandResult.UNCONFIRMED
+    }
+
+    suspend fun setTargetTemperature(tempF: Int): CommandResult {
         logDebug("🎯 Setting Target Temp to $tempF°F")
-        val currentSmoke = _smokerState.value.smokeLevel
-        sendCommand(SmokerPacketCodec.buildCabelasRunModePacket(tempF, currentSmoke))
-        _smokerState.value = _smokerState.value.copy(targetChamberTempF = tempF)
+        val before = _smokerState.value
+        val payload = SmokerPacketCodec.buildCabelasRunModePacket(tempF, before.smokeLevel)
+        _smokerState.value = before.copy(targetChamberTempF = tempF)
+        return sendConfirmed(payload, { SmokerPacketCodec.modeHasTargetTemp(it, tempF) }) {
+            it.copy(targetChamberTempF = before.targetChamberTempF)
+        }
     }
 
-    fun setSmokeLevel(level: Int) {
+    suspend fun setSmokeLevel(level: Int): CommandResult {
         logDebug("💨 Setting Smoke Level to $level")
-        val currentTemp = _smokerState.value.targetChamberTempF.takeIf { it > 0 } ?: 225
-        sendCommand(SmokerPacketCodec.buildCabelasRunModePacket(currentTemp, level))
-        _smokerState.value = _smokerState.value.copy(smokeLevel = level)
+        val before = _smokerState.value
+        val currentTemp = before.targetChamberTempF.takeIf { it > 0 } ?: 225
+        val payload = SmokerPacketCodec.buildCabelasRunModePacket(currentTemp, level)
+        _smokerState.value = before.copy(smokeLevel = level)
+        return sendConfirmed(payload, { SmokerPacketCodec.modeHasSmokeLevel(it, level) }) {
+            it.copy(smokeLevel = before.smokeLevel)
+        }
     }
 
-    fun powerStartup() {
+    suspend fun powerStartup(): CommandResult {
         logDebug("🔥 Sending Power Startup (RUN mode) command")
-        val currentTemp = _smokerState.value.targetChamberTempF.takeIf { it > 0 } ?: 225
-        val currentSmoke = _smokerState.value.smokeLevel
-        sendCommand(SmokerPacketCodec.buildCabelasRunModePacket(currentTemp, currentSmoke))
-        _smokerState.value = _smokerState.value.copy(powerMode = SmokerPowerMode.STARTUP)
+        val before = _smokerState.value
+        val currentTemp = before.targetChamberTempF.takeIf { it > 0 } ?: 225
+        val payload = SmokerPacketCodec.buildCabelasRunModePacket(currentTemp, before.smokeLevel)
+        _smokerState.value = before.copy(powerMode = SmokerPowerMode.STARTUP)
+        return sendConfirmed(payload, SmokerPacketCodec::modeIsRunning) { it.copy(powerMode = before.powerMode) }
     }
 
-    fun powerShutdown() {
+    suspend fun powerShutdown(): CommandResult {
         logDebug("🛑 Sending Power Shutdown (STANDBY) command")
-        sendCommand(SmokerPacketCodec.buildCabelasShutdownPacket())
-        _smokerState.value = _smokerState.value.copy(powerMode = SmokerPowerMode.SHUTDOWN)
+        val before = _smokerState.value
+        _smokerState.value = before.copy(powerMode = SmokerPowerMode.SHUTDOWN)
+        return sendConfirmed(SmokerPacketCodec.buildCabelasShutdownPacket(), SmokerPacketCodec::modeIsShuttingDown) {
+            it.copy(powerMode = before.powerMode)
+        }
     }
 
-    fun provisionWifi(ssid: String, pass: String) {
+    /** True once every Wi-Fi write was accepted. The grill does not report whether it joined. */
+    suspend fun provisionWifi(ssid: String, pass: String): Boolean {
         logDebug("📶 Transmitting Wi-Fi Provisioning (SSID='$ssid')...")
-        val gatt = activeGatt ?: return
+        val gatt = activeGatt ?: return false
         val ssidChar = wifiSsidCharacteristic
         val passChar = wifiPassCharacteristic
         if (ssidChar == null || passChar == null) {
             logDebug("❌ Wi-Fi characteristics (0x20/0x21) not found on this grill.")
-            return
+            return false
         }
-        scope.launch {
-            for (chunk in SmokerPacketCodec.buildChunkedStringWrites(ssid)) {
-                writeChar(gatt, ssidChar, chunk)
+        val writes = SmokerPacketCodec.buildChunkedStringWrites(ssid).map { ssidChar to it } +
+            SmokerPacketCodec.buildChunkedStringWrites(pass).map { passChar to it }
+        for ((char, chunk) in writes) {
+            if (writeChar(gatt, char, chunk)?.status != BluetoothGatt.GATT_SUCCESS) {
+                logDebug("❌ Wi-Fi write failed")
+                return false
             }
-            for (chunk in SmokerPacketCodec.buildChunkedStringWrites(pass)) {
-                writeChar(gatt, passChar, chunk)
-            }
-            logDebug("✅ Wi-Fi credentials sent to characteristics 0x20/0x21")
         }
+        logDebug("✅ Wi-Fi credentials sent to characteristics 0x20/0x21")
+        return true
     }
 
     private fun ByteArray.toHex(): String = joinToString(" ") { "%02X".format(it) }

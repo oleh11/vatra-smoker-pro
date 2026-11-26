@@ -105,7 +105,6 @@ fun DashboardScreen(
     var showWifiDialog by remember { mutableStateOf(false) }
     var wifiSsidInput by remember { mutableStateOf(state.wifiSsid ?: "Home_BBQ_2.4G") }
     var wifiPasswordInput by remember { mutableStateOf("") }
-    var wifiSavedNotice by remember { mutableStateOf(false) }
 
     // Shutdown Safety Confirmation Dialog
     if (showShutdownDialog) {
@@ -199,22 +198,13 @@ fun DashboardScreen(
                         ),
                         modifier = Modifier.fillMaxWidth()
                     )
-                    if (wifiSavedNotice) {
-                        Spacer(modifier = Modifier.height(8.dp))
-                        Text(
-                            text = "✓ Network credentials transmitted to grill!",
-                            style = MaterialTheme.typography.bodySmall,
-                            color = SuccessGreen,
-                            fontWeight = FontWeight.Bold
-                        )
-                    }
                 }
             },
             confirmButton = {
                 Button(
                     onClick = {
                         viewModel.setWifiNetwork(wifiSsidInput, wifiPasswordInput)
-                        wifiSavedNotice = true
+                        showWifiDialog = false
                     },
                     colors = ButtonDefaults.buttonColors(containerColor = Accent, contentColor = OnAccent)
                 ) {
@@ -224,7 +214,6 @@ fun DashboardScreen(
             dismissButton = {
                 TextButton(onClick = {
                     showWifiDialog = false
-                    wifiSavedNotice = false
                 }) {
                     Text("Close", color = TextWhite)
                 }

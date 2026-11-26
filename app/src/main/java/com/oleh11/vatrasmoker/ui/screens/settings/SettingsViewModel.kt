@@ -23,6 +23,9 @@ class SettingsViewModel(
 
     fun setShowMeatProbes(enabled: Boolean) = repository.setShowMeatProbes(enabled)
 
+    val liveNotification: StateFlow<Boolean> = repository.liveNotification
+    fun setLiveNotification(enabled: Boolean) = repository.setLiveNotification(enabled)
+
     fun setTemperatureUnit(unit: TemperatureUnit) {
         viewModelScope.launch {
             repository.setTemperatureUnit(unit)
