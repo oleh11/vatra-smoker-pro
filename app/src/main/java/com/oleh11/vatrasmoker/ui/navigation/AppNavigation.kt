@@ -28,7 +28,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.oleh11.vatrasmoker.SmokerApp
-import com.oleh11.vatrasmoker.data.wifi.WifiProvisioner
 import com.oleh11.vatrasmoker.ui.screens.cook.CookPlannerScreen
 import com.oleh11.vatrasmoker.ui.screens.cook.CookPlannerViewModel
 import com.oleh11.vatrasmoker.ui.screens.dashboard.DashboardScreen
@@ -37,8 +36,6 @@ import com.oleh11.vatrasmoker.ui.screens.scan.DeviceScanScreen
 import com.oleh11.vatrasmoker.ui.screens.scan.DeviceScanViewModel
 import com.oleh11.vatrasmoker.ui.screens.settings.SettingsScreen
 import com.oleh11.vatrasmoker.ui.screens.settings.SettingsViewModel
-import com.oleh11.vatrasmoker.ui.screens.wifi.WifiSetupScreen
-import com.oleh11.vatrasmoker.ui.screens.wifi.WifiSetupViewModel
 import com.oleh11.vatrasmoker.ui.theme.Charcoal500
 import com.oleh11.vatrasmoker.ui.theme.Charcoal800
 import com.oleh11.vatrasmoker.ui.theme.Charcoal900
@@ -54,7 +51,6 @@ fun AppNavigation() {
 
     val context = LocalContext.current
     val repository = (context.applicationContext as SmokerApp).repository
-    val provisioner = WifiProvisioner(context)
 
     // Result of each change sent to the grill, shown on whichever screen is open
     val snackbar = remember { SnackbarHostState() }
@@ -152,13 +148,6 @@ fun AppNavigation() {
                         }
                     }
                 )
-            }
-
-            composable(Screen.WifiSetup.route) {
-                val vm: WifiSetupViewModel = viewModel(
-                    factory = WifiSetupViewModel.Factory(repository, provisioner)
-                )
-                WifiSetupScreen(viewModel = vm)
             }
 
             composable(Screen.BleDiagnostics.route) {

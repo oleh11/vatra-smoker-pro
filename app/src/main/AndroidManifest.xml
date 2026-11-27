@@ -9,12 +9,6 @@
     <uses-permission
         android:name="android.permission.BLUETOOTH_ADMIN"
         android:maxSdkVersion="30" />
-    <uses-permission
-        android:name="android.permission.ACCESS_FINE_LOCATION"
-        android:maxSdkVersion="30" />
-    <uses-permission
-        android:name="android.permission.ACCESS_COARSE_LOCATION"
-        android:maxSdkVersion="30" />
 
     <!-- Modern Bluetooth permissions for Android 12+ (API 31+) -->
     <!-- neverForLocation declares BLE is used purely for communicating with smoker hardware -->
@@ -25,6 +19,11 @@
     <uses-permission
         android:name="android.permission.BLUETOOTH_CONNECT"
         tools:targetApi="s" />
+
+    <!-- Location: Bluetooth scanning on Android 11 and older, and listing Wi-Fi networks for the grill -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-feature android:name="android.hardware.location" android:required="false" />
 
     <!-- Wi-Fi & Network permissions for Smoker provisioning and network monitoring -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />

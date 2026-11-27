@@ -27,7 +27,7 @@
 - **Monitor:** chamber temperature, four meat probes (optional), faults and a live cook chart.
 - **Status notification (optional):** grill temperature, set temperature and smoke level while the grill is on.
 - **Reliable connection:** 15 s timeout, automatic retry on Bluetooth error 133, auto-reconnect, and in-app pairing when the grill requires it.
-- **Wi-Fi setup:** send your home network to the grill over Bluetooth.
+- **Wi-Fi setup:** pick a nearby network from a list and send it to the grill over Bluetooth.
 - **Cook planner:** brisket, pork shoulder, 3-2-1 ribs, salmon, turkey and reverse-sear presets.
 - **Simulator:** try everything without a grill.
 - **Diagnostics:** live GATT log and raw notifications for troubleshooting.

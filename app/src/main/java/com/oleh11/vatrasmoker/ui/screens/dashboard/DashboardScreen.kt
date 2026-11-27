@@ -4,6 +4,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.draw.clip
 import androidx.compose.foundation.border
 import androidx.compose.foundation.Image
+import com.oleh11.vatrasmoker.ui.screens.wifi.WifiPickerDialog
 import com.oleh11.vatrasmoker.ui.theme.OnAccent
 import com.oleh11.vatrasmoker.ui.theme.Accent
 import androidx.compose.foundation.BorderStroke
@@ -103,8 +104,6 @@ fun DashboardScreen(
 
     var showShutdownDialog by remember { mutableStateOf(false) }
     var showWifiDialog by remember { mutableStateOf(false) }
-    var wifiSsidInput by remember { mutableStateOf(state.wifiSsid ?: "Home_BBQ_2.4G") }
-    var wifiPasswordInput by remember { mutableStateOf("") }
 
     // Shutdown Safety Confirmation Dialog
     if (showShutdownDialog) {
@@ -147,78 +146,12 @@ fun DashboardScreen(
 
     // Wi-Fi Network Setup Dialog
     if (showWifiDialog) {
-        AlertDialog(
-            onDismissRequest = { showWifiDialog = false },
-            title = {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(imageVector = Icons.Default.Wifi, contentDescription = null, tint = FlameOrange)
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(
-                        text = "Set Grill Wi-Fi Network",
-                        style = MaterialTheme.typography.titleLarge,
-                        color = TextWhite,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
+        WifiPickerDialog(
+            onSend = { ssid, password ->
+                viewModel.setWifiNetwork(ssid, password)
+                showWifiDialog = false
             },
-            text = {
-                Column {
-                    Text(
-                        text = "Enter your 2.4 GHz home Wi-Fi credentials to transmit them to your Cabela's smoker over Bluetooth.",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = TextGray
-                    )
-                    Spacer(modifier = Modifier.height(14.dp))
-                    OutlinedTextField(
-                        value = wifiSsidInput,
-                        onValueChange = { wifiSsidInput = it },
-                        label = { Text("Network Name (SSID)") },
-                        colors = OutlinedTextFieldDefaults.colors(
-                            focusedBorderColor = Accent,
-                            unfocusedBorderColor = Charcoal700,
-                            focusedTextColor = TextWhite,
-                            unfocusedTextColor = TextWhite
-                        ),
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                    Spacer(modifier = Modifier.height(10.dp))
-                    OutlinedTextField(
-                        value = wifiPasswordInput,
-                        onValueChange = { wifiPasswordInput = it },
-                        label = { Text("Password (WPA2)") },
-                        visualTransformation = PasswordVisualTransformation(),
-                        leadingIcon = {
-                            Icon(imageVector = Icons.Default.Lock, contentDescription = null, tint = FlameOrange)
-                        },
-                        colors = OutlinedTextFieldDefaults.colors(
-                            focusedBorderColor = Accent,
-                            unfocusedBorderColor = Charcoal700,
-                            focusedTextColor = TextWhite,
-                            unfocusedTextColor = TextWhite
-                        ),
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                }
-            },
-            confirmButton = {
-                Button(
-                    onClick = {
-                        viewModel.setWifiNetwork(wifiSsidInput, wifiPasswordInput)
-                        showWifiDialog = false
-                    },
-                    colors = ButtonDefaults.buttonColors(containerColor = Accent, contentColor = OnAccent)
-                ) {
-                    Text("Save & Connect Grill", fontWeight = FontWeight.Bold)
-                }
-            },
-            dismissButton = {
-                TextButton(onClick = {
-                    showWifiDialog = false
-                }) {
-                    Text("Close", color = TextWhite)
-                }
-            },
-            containerColor = Charcoal800
+            onDismiss = { showWifiDialog = false }
         )
     }
 
